@@ -1,0 +1,14 @@
+{
+  "name": "sentinel",
+  "version": "0.1.0",
+  "description": "monorepo for Sentinel",
+  "main": "index.js",
+  "repository": "https://github.com/DukeFerdinand/sentinel.git",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^5.0.0"
+  },
+  "scripts": {
+    "postinstall": "husky install"
+  }
+}
