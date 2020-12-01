@@ -3,11 +3,11 @@
 
 
 
-name: Node.js CI
+name: Frontend Tester
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master,development ]
   pull_request:
     branches: [ master ]
 
@@ -22,10 +22,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Test + Build Sentinel UI ${{ matrix.node-version }}
+    - name: Setup Node ${{ matrix.node-version }}...
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn  
-    - run: yarn test
-    - run: yarn build --if-present
+    - name: Install deps
+      working-directory: ./sentinel-ui
+      run: yarn
+    - name: Test Front
+      working-directory: ./sentinel-ui
+      run: yarn test
+    - name: Build
+      working-directory: ./sentinel-ui
+      run: yarn build --if-present
+      
