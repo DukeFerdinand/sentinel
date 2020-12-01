@@ -1,0 +1,55 @@
+name: Code Climate coverage
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '!*' # Do not execute on tags
+    paths:
+      - sentinel-ui/*
+#       - test/*
+      - 'sentinel-ui/*.json'
+      - yarn.lock
+  pull_request:
+    paths:
+      - '!*.MD'
+jobs:
+  test:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node: [ '15' ]
+    name: test/node ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
+      with:
+        node-version: ${{ matrix.node }}
+    - run: yarn install
+      working-directory: sentinel-ui
+    - run: yarn build
+      working-directory: sentinel-ui
+    - run: yarn test
+      working-directory: sentinel-ui
+  coverage:
+    needs: [ test ]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
+      with:
+        node-version: '15'
+#     - run: npm install -g yarn
+    - run: yarn install
+      working-directory: sentinel-ui
+    - run: yarn build
+      working-directory: sentinel-ui
+    - uses: paambaati/codeclimate-action@v2.2.4
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      with:
+        working-directory: sentinel-ui
+        coverageCommand: yarn coverage
+
