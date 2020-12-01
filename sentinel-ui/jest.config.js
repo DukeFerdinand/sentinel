@@ -11,4 +11,7 @@ module.exports = {
       babelConfig: true,
     },
   },
+  collectCoverage: true,
+  coverageReporters: ['lcov'],
+  collectCoverageFrom: ['lib/**/*.{js,jsx,ts,tsx}'],
 };
