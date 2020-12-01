@@ -7,7 +7,7 @@ name: Frontend Tester
 
 on:
   push:
-    branches: [ master,development ]
+    branches: [ development ]
   pull_request:
     branches: [ master ]
 
