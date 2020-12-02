@@ -38,6 +38,7 @@ ALLOWED_HOSTS = hosts.split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'user_auth.apps.UserAuthConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,8 +83,12 @@ WSGI_APPLICATION = 'sentinel_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ['SENTINEL_API_DB_ENGINE'],
+        'NAME': os.environ['SENTINEL_API_DB_NAME'],
+        'USER': os.environ['SENTINEL_API_DB_USER'],
+        'PASSWORD': os.environ['SENTINEL_API_DB_PASSWORD'],
+        'HOST': os.environ['SENTINEL_API_DB_HOST'],
+        'PORT': os.environ['SENTINEL_API_DB_PORT'],
     }
 }
 
