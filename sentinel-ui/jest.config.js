@@ -13,5 +13,5 @@ module.exports = {
   },
   collectCoverage: true,
   coverageReporters: ['lcov'],
-  collectCoverageFrom: ['lib/**/*.{js,jsx,ts,tsx}'],
+  collectCoverageFrom: ['{components,pages}/**/*.{js,jsx,ts,tsx}'],
 };
