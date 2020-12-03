@@ -9,4 +9,5 @@ class User(models.Model):
     password = models.CharField(max_length=20)
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
+    email = models.EmailField(max_length=30)
 
