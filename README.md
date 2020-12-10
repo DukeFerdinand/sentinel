@@ -1,3 +1,5 @@
+[![buddy pipeline](https://app.buddy.works/douglasshooker/sentinel/pipelines/pipeline/294513/badge.svg?token=61a92f524166b6bb6c97fd997e9745d6f5c4e3e5b918665b7f5b5456b2a6b021 'buddy pipeline')](https://app.buddy.works/douglasshooker/sentinel/pipelines/pipeline/294513)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
