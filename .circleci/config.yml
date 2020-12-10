@@ -1,0 +1,25 @@
+version: 2.1
+jobs:
+  check-app:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: |
+            yarn install
+      - run:
+          name: lint
+          command: |
+            yarn run lint
+      - run:
+          name: test
+          command: |
+            yarn run test
+workflows:
+  build-test:
+    jobs:
+      - check-app
