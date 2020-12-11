@@ -26,12 +26,16 @@ const Home: NextPage<HomeProps> = ({ data, error }) => {
   );
 };
 
-Home.getInitialProps = async (ctx): Promise<HomeProps> => {
+Home.getInitialProps = async (): Promise<HomeProps> => {
+  // Vercel and similar hosting platforms give auto https
+  const url = `${
+    process.env.IS_LOCAL && process.env.IS_LOCAL !== 'false' ? 'http' : 'https'
+  }://${process.env.BASEURL}`;
   const res = await smartFetch<{ message: string }, Error>(
     RequestMethods.GET,
     '/api/',
     {
-      baseUrl: process.env.BASEURL,
+      baseUrl: url,
     }
   );
 
