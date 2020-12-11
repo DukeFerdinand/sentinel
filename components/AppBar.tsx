@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const SidebarStyles = {
+const AppBarStyles = {
   Wrapper: css({
     background: '#F18C8E',
     height: '100vh',
@@ -8,10 +8,10 @@ const SidebarStyles = {
   }),
 };
 
-export const Sidebar: React.FC = () => {
+export const AppBar: React.FC = () => {
   return (
-    <aside css={SidebarStyles.Wrapper}>
-      <div>Sidebar</div>
+    <aside css={AppBarStyles.Wrapper}>
+      <div>AppBar</div>
     </aside>
   );
 };

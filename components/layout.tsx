@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { css, Global } from '@emotion/react';
 import { GlobalStyles } from '../styles/globals';
-import { Sidebar } from './sidebar';
+import { AppBar } from './AppBar';
 
 const LayoutStyles = {
   Main: css({
@@ -24,7 +24,7 @@ const Layout: React.FC = ({ children }) => {
       <Global styles={GlobalStyles} />
 
       {/* Then any top level components */}
-      <Sidebar />
+      <AppBar />
 
       {/* THEN the main flow */}
       {children}
