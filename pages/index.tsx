@@ -1,9 +1,8 @@
+import { Fragment } from 'react';
 import { NextPage } from 'next';
 import { SmartFetch } from '@dukeferdinand/ts-utils';
 
 const { smartFetch, RequestMethods } = SmartFetch;
-
-import Layout from '../components/layout';
 
 interface HomeProps {
   data?: {
@@ -16,13 +15,13 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = ({ data, error }) => {
   return (
-    <Layout>
+    <Fragment>
       {data ? (
         <div>Hello! props: {data.message}</div>
       ) : (
         <div>Error getting ip: {error?.message}</div>
       )}
-    </Layout>
+    </Fragment>
   );
 };
 
