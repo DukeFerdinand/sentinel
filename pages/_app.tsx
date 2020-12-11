@@ -1,5 +1,5 @@
 import App from 'next/app';
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 import { Context } from '../store';
 
 class MyApp extends App {
