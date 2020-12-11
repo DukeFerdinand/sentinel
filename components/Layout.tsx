@@ -2,11 +2,15 @@ import Head from 'next/head';
 import { css, Global } from '@emotion/react';
 import { GlobalStyles } from '../styles/globals';
 import { AppBar } from './AppBar';
+import { Breakpoints } from '../styles/breakpoints';
 
 const LayoutStyles = {
   Main: css({
     height: '100vh',
     display: 'flex',
+    [Breakpoints.Tablet]: {
+      flexDirection: 'column',
+    },
   }),
 };
 
