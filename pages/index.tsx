@@ -8,7 +8,7 @@ import Layout from '../components/layout';
 
 interface HomeProps {
   data?: {
-    ip: string;
+    message: string;
   };
   error?: {
     message: string;
@@ -19,7 +19,7 @@ const Home: NextPage<HomeProps> = ({ data, error }) => {
   return (
     <Layout>
       {data ? (
-        <div>Hello! props: {data.ip}</div>
+        <div>Hello! props: {data.message}</div>
       ) : (
         <div>Error getting ip: {error}</div>
       )}
@@ -31,9 +31,9 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
   context
 ) => {
   console.info(context);
-  const res = await smartFetch<{ ip: string }, Error>(
+  const res = await smartFetch<{ message: 'graphql!' }, Error>(
     RequestMethods.GET,
-    'https://api.ipify.org?format=json'
+    '/'
   );
 
   if (res.isOk()) {
