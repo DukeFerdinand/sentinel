@@ -1,9 +1,28 @@
-import { AppProps } from 'next/dist/next-server/lib/router/router';
-import { ReactNode } from 'react';
+import App from 'next/app';
+import Layout from '../components/layout';
+import { Context } from '../store';
 
-//! This return type might be wrong, so if anything screwy happens, look here
-function MyApp({ Component, pageProps }: AppProps): ReactNode {
-  return <Component {...pageProps} />;
+class MyApp extends App {
+  static contextType = Context;
+
+  render(): JSX.Element {
+    const { Component, pageProps } = this.props;
+
+    return (
+      <Layout>
+        <Context.Provider
+          value={{
+            fetchConfig: {
+              // TODO: Make this dynamic before pushing to hosting
+              baseUrl: 'http://localhost',
+            },
+          }}
+        >
+          <Component {...pageProps} />
+        </Context.Provider>
+      </Layout>
+    );
+  }
 }
 
 export default MyApp;
