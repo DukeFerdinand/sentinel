@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { SmartFetch } from '@dukeferdinand/ts-utils';
 
 const { smartFetch, RequestMethods } = SmartFetch;
@@ -25,8 +25,7 @@ const Home: NextPage<HomeProps> = ({ data, error }) => {
   );
 };
 
-Home.getInitialProps = async (): Promise<HomeProps> => {
-  // Vercel and similar hosting platforms give auto https
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   const url = `${
     process.env.IS_LOCAL && process.env.IS_LOCAL !== 'false' ? 'http' : 'https'
   }://${process.env.BASEURL}`;
@@ -40,12 +39,16 @@ Home.getInitialProps = async (): Promise<HomeProps> => {
 
   if (res.isOk()) {
     return {
-      data: res.unwrap(),
+      props: {
+        data: res.unwrap(),
+      },
     };
   } else {
     return {
-      error: {
-        message: `${res.unwrapErr().message}`,
+      props: {
+        error: {
+          message: `${res.unwrapErr().message}`,
+        },
       },
     };
   }
