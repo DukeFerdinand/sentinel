@@ -1,14 +1,12 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { Fragment } from 'react';
+import { NextPage } from 'next';
 import { SmartFetch } from '@dukeferdinand/ts-utils';
 
 const { smartFetch, RequestMethods } = SmartFetch;
 
-import Layout from '../components/layout';
-// import styles from '../styles/Home.module.css';
-
 interface HomeProps {
   data?: {
-    ip: string;
+    message: string;
   };
   error?: {
     message: string;
@@ -17,35 +15,37 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = ({ data, error }) => {
   return (
-    <Layout>
+    <Fragment>
       {data ? (
-        <div>Hello! props: {data.ip}</div>
+        <div>Hello! props: {data.message}</div>
       ) : (
-        <div>Error getting ip: {error}</div>
+        <div>Error getting ip: {error?.message}</div>
       )}
-    </Layout>
+    </Fragment>
   );
 };
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async (
-  context
-) => {
-  console.info(context);
-  const res = await smartFetch<{ ip: string }, Error>(
+Home.getInitialProps = async (): Promise<HomeProps> => {
+  // Vercel and similar hosting platforms give auto https
+  const url = `${
+    process.env.IS_LOCAL && process.env.IS_LOCAL !== 'false' ? 'http' : 'https'
+  }://${process.env.BASEURL}`;
+  const res = await smartFetch<{ message: string }, Error>(
     RequestMethods.GET,
-    'https://api.ipify.org?format=json'
+    '/api/',
+    {
+      baseUrl: url,
+    }
   );
 
   if (res.isOk()) {
     return {
-      props: {
-        data: res.unwrap(),
-      },
+      data: res.unwrap(),
     };
   } else {
     return {
-      props: {
-        error: res.unwrapErr(),
+      error: {
+        message: `${res.unwrapErr().message}`,
       },
     };
   }

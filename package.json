@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@dukeferdinand/ts-utils": "^1.2.0",
+    "apollo-server-micro": "^2.19.0",
     "next": "10.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1"

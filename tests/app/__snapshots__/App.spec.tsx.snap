@@ -3,49 +3,17 @@
 exports[`App renders without crashing 1`] = `
 Object {
   "asFragment": [Function],
-  "baseElement": .emotion-0 {
-  height: 100vh;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-<body>
+  "baseElement": <body>
     <div>
-      <main
-        class="emotion-0"
-      >
-        <div>
-          Error getting ip: 
-        </div>
-      </main>
-    </div>
-  </body>,
-  "container": .emotion-0 {
-  height: 100vh;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-<div>
-    <main
-      class="emotion-0"
-    >
       <div>
         Error getting ip: 
       </div>
-    </main>
+    </div>
+  </body>,
+  "container": <div>
+    <div>
+      Error getting ip: 
+    </div>
   </div>,
   "debug": [Function],
   "findAllByAltText": [Function],
