@@ -15,13 +15,13 @@ interface HomeProps {
   };
 }
 
-const HELLO_QUERY = gql`
+export const HELLO_QUERY = gql`
   query HelloQuery {
     sayHello
   }
 `;
 
-const Home: NextPage<HomeProps> = () => {
+export const Home: NextPage<HomeProps> = () => {
   const { data, loading, error } = useQuery<{ sayHello: string }>(HELLO_QUERY);
 
   if (!loading) {
