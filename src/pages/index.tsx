@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { SmartFetch } from '@dukeferdinand/ts-utils';
+import { withUrl } from '../utils/withUrl';
 
 const { smartFetch, RequestMethods } = SmartFetch;
 
@@ -26,14 +27,11 @@ const Home: NextPage<HomeProps> = ({ data, error }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const url = `${
-    process.env.IS_LOCAL && process.env.IS_LOCAL !== 'false' ? 'http' : 'https'
-  }://${process.env.BASEURL}`;
   const res = await smartFetch<{ message: string }, Error>(
     RequestMethods.GET,
     '/api/',
     {
-      baseUrl: url,
+      baseUrl: withUrl(),
     }
   );
 
