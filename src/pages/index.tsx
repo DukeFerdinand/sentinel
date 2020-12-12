@@ -1,7 +1,8 @@
-import { Fragment } from 'react';
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import { SmartFetch } from '@dukeferdinand/ts-utils';
-import { withUrl } from '../utils/withUrl';
+import { gql, useQuery } from '@apollo/react-hooks';
+
+import { withApollo } from '../lib/apollo';
 
 const { smartFetch, RequestMethods } = SmartFetch;
 
@@ -14,42 +15,20 @@ interface HomeProps {
   };
 }
 
-const Home: NextPage<HomeProps> = ({ data, error }) => {
-  return (
-    <Fragment>
-      {data ? (
-        <div>Hello! props: {data.message}</div>
-      ) : (
-        <div>Error getting ip: {error?.message}</div>
-      )}
-    </Fragment>
-  );
-};
+const HELLO_QUERY = gql`
+  query HelloQuery {
+    sayHello
+  }
+`;
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const res = await smartFetch<{ message: string }, Error>(
-    RequestMethods.GET,
-    '/api/',
-    {
-      baseUrl: withUrl(),
-    }
-  );
+const Home: NextPage<HomeProps> = () => {
+  const { data, loading, error } = useQuery<{ sayHello: string }>(HELLO_QUERY);
 
-  if (res.isOk()) {
-    return {
-      props: {
-        data: res.unwrap(),
-      },
-    };
+  if (!loading) {
+    return <div>{data?.sayHello || 'Error'}</div>;
   } else {
-    return {
-      props: {
-        error: {
-          message: `${res.unwrapErr().message}`,
-        },
-      },
-    };
+    return <div>Loading</div>;
   }
 };
 
-export default Home;
+export default withApollo(Home);

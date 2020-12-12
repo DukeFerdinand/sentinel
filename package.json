@@ -11,8 +11,13 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.6",
+    "@apollo/react-hooks": "^4.0.0",
+    "@apollo/react-ssr": "^4.0.0",
     "@dukeferdinand/ts-utils": "^1.2.0",
     "apollo-server-micro": "^2.19.0",
+    "graphql-tag": "^2.11.0",
+    "isomorphic-unfetch": "^3.1.0",
     "next": "10.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1"
