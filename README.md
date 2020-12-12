@@ -1,32 +1,75 @@
+## Sentinel
+
 [![buddy pipeline](https://app.buddy.works/douglasshooker/sentinel/pipelines/pipeline/294513/badge.svg?token=61a92f524166b6bb6c97fd997e9745d6f5c4e3e5b918665b7f5b5456b2a6b021 'buddy pipeline')](https://app.buddy.works/douglasshooker/sentinel/pipelines/pipeline/294513)
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Something of a clone to the ever popular [sentry](sentry.io) error and exception tracker. For legal and support reasons (or if you're not a little crazy like me), give a look to their open source, self-hosted software before you look here :)
 
-## Getting Started
+The name is 100% a play on the `sentry` name in case that wasn't totally clear!
 
-First, run the development server:
+### TL;DR
 
 ```bash
-npm run dev
-# or
-yarn dev
+# Clone repo
+$ git clone git@github.com:DukeFerdinand/sentinel.git
+# Install
+$ yarn
+# Setup your env
+$ cp .env.local.example .env.local # then optionally edit the new .env.local file
+# Run
+$ yarn dev
+# Test
+$ yarn test
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Motivation
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+I'm weird, I _really_ like error handling and state management... So after I created a tool for work based on [Rust `Result` enums](https://doc.rust-lang.org/stable/std/result/enum.Result.html) (the tool of course I've stripped, improved for more than just that app, and released as `smartFetch` in my `ts-utils` repo btw), I realized I didn't have anywhere to use my more advanced decorator error hooks :)
 
-## Learn More
+In comes Sentinel! It was supposed to be another tool for work, but ultimately we scrapped it and my OSS baby was born! I'm kinda glad we did so I can experiment ;)
 
-To learn more about Next.js, take a look at the following resources:
+### Tech stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Here's the layout, along with _planned_ features marked with `?` where they aren't actually implemented yet:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### Frontend
 
-## Deploy on Vercel
+- React + TS
+- My ts-utils lib with `smartFetch`
+- GQL (apollo)
+- Next.js
+- Emotion.js
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Backend
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Next.js serverless functions (GQL, Auth ?)
+- Node.js event ingesting functions ?
+- MongoDB
+
+#### Planned Integrations ?
+
+- Generic JS module first
+- React `HOC`
+- Rust crate
+- Python package (I use python for MQTT and Pi stuff a lot)
+
+And of course tying it all together...
+
+#### Hosting
+
+UI and most serverless Next.js functions will be shipped via Vercel (parent company of Next.js now) for the first class citizen perks. Sorry Netlify I love you, but not this time. I need that zero effort SSR hosting! :(
+
+Any general ingesting will mostly be serverless Node functions. This could be done with Vercel too, but I have an affinity for GCP because I basically taught it to myself in Grand Central while I was in NYC, though AWS would work too... Ultimately whatever is cheaper because they're just as complicated ;)
+
+### Can I use this?
+
+Sure! If you decide to use it for your own purposes gimme a shout and I'll link you here in the README :)
+
+If for any reason you want to use it _with a company_, give me some company merch and we've got a deal!
+
+Shoutouts and merch are totally optional as this is open source, but throwing back some respect keeps me and the community motivated :)
+
+### Summary
+
+Feel free to use it, just know that there are better funded options out there should you need anything beyond what I (a lone dev) can provide.
+
+This is purely a passion project as well as an experience builder for Full Stack work :)
