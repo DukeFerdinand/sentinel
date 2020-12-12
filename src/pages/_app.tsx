@@ -1,4 +1,5 @@
 import App from 'next/app';
+import { ContextProviders } from '../components/ContextProviders';
 import Layout from '../components/Layout';
 import { Context } from '../store';
 
@@ -9,18 +10,11 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <Layout>
-        <Context.Provider
-          value={{
-            fetchConfig: {
-              // TODO: Make this dynamic before pushing to hosting
-              baseUrl: 'http://localhost',
-            },
-          }}
-        >
+      <ContextProviders>
+        <Layout>
           <Component {...pageProps} />
-        </Context.Provider>
-      </Layout>
+        </Layout>
+      </ContextProviders>
     );
   }
 }
