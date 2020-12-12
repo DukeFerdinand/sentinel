@@ -6,13 +6,13 @@ Object {
   "baseElement": <body>
     <div>
       <div>
-        Error getting ip: 
+        Loading
       </div>
     </div>
   </body>,
   "container": <div>
     <div>
-      Error getting ip: 
+      Loading
     </div>
   </div>,
   "debug": [Function],
