@@ -37,18 +37,20 @@ export const Home: NextPage<HomeProps> = () => {
 
   if (error) {
     console.error(error);
+    return <div>Got an error, check console.</div>;
   }
 
   if (loading) {
     return <div>Loading</div>;
   }
 
+  // TODO: Figure out why there's an error here
+  // when calling setUser() it calls setState in another component
   if (data) {
     setUser && setUser(data.user);
-    return <div>Hello, fake user {user?.username}!</div>;
   }
 
-  return <div>Got an error, check console.</div>;
+  return <div>Hello, fake user {user?.username}!</div>;
 };
 
 export default withApollo(Home);
