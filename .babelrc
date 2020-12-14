@@ -1,4 +1,8 @@
 {
   "presets": ["next/babel", "@emotion/babel-preset-css-prop"],
-  "plugins": ["@babel/plugin-proposal-do-expressions", "@emotion"]
+  "plugins": [
+    "@babel/plugin-proposal-do-expressions",
+    "graphql-tag",
+    "@emotion"
+  ]
 }
