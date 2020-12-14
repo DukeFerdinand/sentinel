@@ -3,6 +3,8 @@ import { css, Global } from '@emotion/react';
 import { GlobalStyles } from '../styles/globals';
 import { AppBar } from './AppBar';
 import { Breakpoints } from '../styles/breakpoints';
+import { useContext } from 'react';
+import { UserContext } from '../store';
 
 const LayoutStyles = {
   Main: css({
@@ -15,6 +17,7 @@ const LayoutStyles = {
 };
 
 const Layout: React.FC = ({ children }) => {
+  const { user } = useContext(UserContext);
   return (
     <main css={LayoutStyles.Main}>
       <Head>
@@ -28,7 +31,7 @@ const Layout: React.FC = ({ children }) => {
       <Global styles={GlobalStyles} />
 
       {/* Then any top level components */}
-      <AppBar />
+      {user && <AppBar />}
 
       {/* THEN the main flow */}
       {children}
