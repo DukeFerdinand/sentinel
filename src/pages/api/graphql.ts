@@ -1,18 +1,6 @@
-import { ApolloServer, gql } from 'apollo-server-micro';
-
-const typeDefs = gql`
-  type Query {
-    sayHello: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    sayHello: () => {
-      return 'Hello, Level Up!';
-    },
-  },
-};
+import { ApolloServer } from 'apollo-server-micro';
+import typeDefs from '../../api/typeDefs';
+import resolvers from '../../api/resolvers';
 
 const apolloServer = new ApolloServer({
   typeDefs,
