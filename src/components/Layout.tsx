@@ -4,7 +4,7 @@ import { GlobalStyles } from '../styles/globals';
 import { AppBar } from './AppBar';
 import { Breakpoints } from '../styles/breakpoints';
 import { useContext } from 'react';
-import { UserContext } from '../store';
+import { Store } from '../store';
 
 const LayoutStyles = {
   Main: css({
@@ -17,7 +17,7 @@ const LayoutStyles = {
 };
 
 const Layout: React.FC = ({ children }) => {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(Store);
   return (
     <main css={LayoutStyles.Main}>
       <Head>

@@ -1,20 +1,19 @@
 import App from 'next/app';
-import { ContextProviders } from '../components/ContextProviders';
 import Layout from '../components/Layout';
-import { Context } from '../store';
+import { StateProvider, Store } from '../store';
 
 class MyApp extends App {
-  static contextType = Context;
+  static contextType = Store;
 
   render(): JSX.Element {
     const { Component, pageProps } = this.props;
 
     return (
-      <ContextProviders>
+      <StateProvider>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </ContextProviders>
+      </StateProvider>
     );
   }
 }

@@ -2,7 +2,7 @@ import { render, act } from '@testing-library/react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 
 import { Home, USER_QUERY } from '../pages/index';
-import { ContextProviders } from '../components/ContextProviders';
+import { StateProvider } from '../store';
 
 // The mocked shape here must match the component's actual request EXACTLY
 // It's best to use the REAL query, and just pass in fake variables and resolve fake data
@@ -38,11 +38,11 @@ describe('Home/Index Page', () => {
   // TODO: Fix the warning here to avoid context updating components that don't need to update in this test
   it('renders proper data when available', async () => {
     const component = render(
-      <ContextProviders>
+      <StateProvider>
         <MockedProvider mocks={mocks} addTypename={false}>
           <Home />
         </MockedProvider>
-      </ContextProviders>
+      </StateProvider>
     );
 
     /**

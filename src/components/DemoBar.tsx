@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { Store } from '../store';
 import { Breakpoints } from '../styles/breakpoints';
 
-const AppBarStyles = {
+const DemoBarStyles = {
   Wrapper: css({
     background: '#F18C8E',
     height: '100vh',
@@ -15,12 +14,10 @@ const AppBarStyles = {
   }),
 };
 
-export const AppBar: React.FC = () => {
-  const { user } = useContext(Store);
-
+export const DemoBar: React.FC = () => {
   return (
-    <aside css={AppBarStyles.Wrapper}>
-      <div>AppBar</div>
+    <aside css={DemoBarStyles.Wrapper}>
+      <div>DemoBar</div>
     </aside>
   );
 };
