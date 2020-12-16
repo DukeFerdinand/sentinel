@@ -1,19 +1,30 @@
 type User {
   id: ID!
-  username: String!
-  # email: String!
+  email: String!
+  name: String!
+  password: String!
 }
 
+# ID is optional so we can use this same input for updates
 input UserInput {
   id: ID
-  username: String!
-  # email: String!
+  email: String!
+  name: String!
+  password: String!
+}
+
+# email + password OR id are required. Not a combo
+input UserLogin {
+  email: String
+  password: String
+  # key: String -> NOT IMPLEMENTED YET
 }
 
 type Mutation {
-  createUser(user: UserInput): User
+  register(user: UserInput!): User
 }
 
 type Query {
-  user(id: ID): User
+  # user(search: UserSearch): User
+  login(user: UserLogin!): User
 }
