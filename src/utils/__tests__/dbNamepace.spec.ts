@@ -8,11 +8,12 @@ describe('withNamespace', () => {
 
   it('adds base db namespace for development', () => {
     process.env.NEXT_PUBLIC_IS_LOCAL = 'true';
-    expect(withNamespace('users')).toBe('dev/users');
+    expect(withNamespace('users')).toBe('dev/users/users');
+    expect(withNamespace('users', 'subuser')).toBe('dev/users/subuser');
   });
 
   it('adds base db namespace for production', () => {
     process.env.NEXT_PUBLIC_IS_LOCAL = 'false';
-    expect(withNamespace('users')).toBe('prod/users');
+    expect(withNamespace('users', 'subuser')).toBe('prod/users/subuser');
   });
 });
