@@ -40,8 +40,6 @@ export const userMutations: ResolverObj<'Mutation'> = {
 
       const usersRef = dbConnection().collection(withNamespace('users'));
 
-      console.info('[namespace] => ', withNamespace('users'));
-
       try {
         // Call `.create(doc)` instead of `.set` if you want to guarantee a unique email.
         await usersRef.doc(completeUser.email).create(completeUser);
@@ -56,7 +54,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
         ) {
           return new ApolloError('Email already in use');
         }
-        console.error('[ERROR HERE] =>', error.message);
+        console.error('[CAUGHT ERROR] =>', error.message);
       }
       return new ApolloError('Something went wrong');
     },
