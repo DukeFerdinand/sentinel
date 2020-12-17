@@ -40,12 +40,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
 
       const usersRef = dbConnection().collection(withNamespace('users'));
 
-      console.info(
-        '[namespace] => ',
-        withNamespace('users'),
-        '[ref] =>',
-        usersRef
-      );
+      console.info('[namespace] => ', withNamespace('users'));
 
       try {
         // Call `.create(doc)` instead of `.set` if you want to guarantee a unique email.
