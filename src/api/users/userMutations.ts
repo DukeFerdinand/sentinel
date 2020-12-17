@@ -11,7 +11,6 @@ import {
   MutationRegisterArgs,
 } from '../../@generated/graphql';
 import { dbConnection } from '../../lib/firestore';
-import { withNamespace } from '../../utils/dbNamespace';
 
 const comparePassword = async (
   attempt: UserLogin,
@@ -28,6 +27,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
     ): Promise<User | ApolloError> {
       const completeUser: User = {
         ...user,
+        email: user.email.toLowerCase(),
         password: await bcrypt.hash(
           user.password,
           parseInt(process.env.DB_PASSWORD_SALT as string)
@@ -35,7 +35,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
         id: uuidGen(),
       };
 
-      const usersRef = dbConnection().collection(withNamespace('users'));
+      const usersRef = dbConnection().collection('users');
 
       try {
         // Call `.create(doc)` instead of `.set` if you want to guarantee a unique email.
@@ -59,12 +59,12 @@ export const userMutations: ResolverObj<'Mutation'> = {
       _,
       { user }: MutationLoginArgs
     ): Promise<User | GraphQLError> => {
-      const usersRef = dbConnection().collection(withNamespace('users'));
+      const usersRef = dbConnection().collection('users');
 
       if (user.email) {
         try {
           // Attempt to get user doc (stored by email for unique factor)
-          const res = await usersRef.doc(user.email).get();
+          const res = await usersRef.doc(user.email.toLowerCase()).get();
           const data = res.data();
 
           // Data is undefined if there's no match, compare in same check for less "if/else" overhead
