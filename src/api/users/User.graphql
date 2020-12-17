@@ -15,16 +15,16 @@ input UserInput {
 
 # email + password OR id are required. Not a combo
 input UserLogin {
-  email: String
-  password: String
+  email: String!
+  password: String!
   # key: String -> NOT IMPLEMENTED YET
 }
 
 type Mutation {
   register(user: UserInput!): User
-}
-
-type Query {
-  # user(search: UserSearch): User
   login(user: UserLogin!): User
 }
+
+# type Query {
+#   # user(search: UserSearch): User
+# }

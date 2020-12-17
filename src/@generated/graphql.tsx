@@ -19,12 +19,6 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   sayHello?: Maybe<Scalars['String']>;
-  login?: Maybe<User>;
-};
-
-
-export type QueryLoginArgs = {
-  user: UserLogin;
 };
 
 export type User = {
@@ -43,18 +37,24 @@ export type UserInput = {
 };
 
 export type UserLogin = {
-  email?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   register?: Maybe<User>;
+  login?: Maybe<User>;
 };
 
 
 export type MutationRegisterArgs = {
   user: UserInput;
+};
+
+
+export type MutationLoginArgs = {
+  user: UserLogin;
 };
 
 export enum CacheControlScope {
@@ -168,7 +168,6 @@ export type ResolversParentTypes = {
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   sayHello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'user'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -181,6 +180,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   register?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, 'user'>>;
+  login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'user'>>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {

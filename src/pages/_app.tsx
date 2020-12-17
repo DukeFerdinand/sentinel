@@ -2,6 +2,9 @@ import App from 'next/app';
 import Layout from '../components/Layout';
 import { StateProvider, Store } from '../store';
 
+// import 'tailwindcss/tailwind.css';
+import '../styles/globals.css';
+
 class MyApp extends App {
   static contextType = Store;
 

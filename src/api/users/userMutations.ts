@@ -1,20 +1,34 @@
 import { ApolloError } from 'apollo-server-micro';
 import bcrypt from 'bcrypt';
+import { GraphQLError } from 'graphql';
 import { v4 as uuidGen } from 'uuid';
-import { UserInput, User } from '../../@generated/graphql';
+
 import { ResolverObj } from '../../@types/structures';
+import {
+  User,
+  UserLogin,
+  MutationLoginArgs,
+  MutationRegisterArgs,
+} from '../../@generated/graphql';
 import { dbConnection } from '../../lib/firestore';
 import { withNamespace } from '../../utils/dbNamespace';
+
+const comparePassword = async (
+  attempt: UserLogin,
+  stored: User
+): Promise<boolean> => {
+  return await bcrypt.compare(attempt.password, stored.password);
+};
 
 export const userMutations: ResolverObj<'Mutation'> = {
   Mutation: {
     async register(
       _,
-      { user }: { user: UserInput }
+      { user }: MutationRegisterArgs
     ): Promise<User | ApolloError> {
       console.info('user args =>', [JSON.stringify(user)]);
 
-      const completeUser = {
+      const completeUser: User = {
         ...user,
         password: await bcrypt.hash(
           user.password,
@@ -41,6 +55,35 @@ export const userMutations: ResolverObj<'Mutation'> = {
         }
       }
       return new ApolloError('Something went wrong');
+    },
+    login: async (
+      _,
+      { user }: MutationLoginArgs
+    ): Promise<User | GraphQLError> => {
+      const usersRef = dbConnection().collection(withNamespace('users'));
+
+      if (user.email) {
+        try {
+          // Attempt to get user doc (stored by email for unique factor)
+          const res = await usersRef.doc(user.email).get();
+          const data = res.data();
+
+          // Data is undefined if there's no match, compare in same check for less "if/else" overhead
+          if (data && (await comparePassword(user, data as User))) {
+            return data as User;
+          }
+
+          // We don't need a distinction between failed email and failed password for login
+          // so just say "one of these is wrong"
+          return new ApolloError('Username or password are incorrect');
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      console.info('[ERROR] Search by ID not implemented');
+
+      return new ApolloError('Error fetching user');
     },
   },
 };

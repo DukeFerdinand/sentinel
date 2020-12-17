@@ -1,25 +1,14 @@
 import Head from 'next/head';
-import { css, Global } from '@emotion/react';
+import { Global } from '@emotion/react';
 import { GlobalStyles } from '../styles/globals';
 import { AppBar } from './AppBar';
-import { Breakpoints } from '../styles/breakpoints';
 import { useContext } from 'react';
 import { Store } from '../store';
-
-const LayoutStyles = {
-  Main: css({
-    height: '100vh',
-    display: 'flex',
-    [Breakpoints.Tablet]: {
-      flexDirection: 'column',
-    },
-  }),
-};
 
 const Layout: React.FC = ({ children }) => {
   const { user } = useContext(Store);
   return (
-    <main css={LayoutStyles.Main}>
+    <main className="h-screen flex">
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link

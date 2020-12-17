@@ -1,81 +1,162 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/dist/client/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Store } from '../../store';
+import gql from 'graphql-tag';
+import { withApollo } from '../../lib/apollo';
+import { useMutation, useQuery } from '@apollo/client';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { User, UserInput, UserLogin } from '../../@generated/graphql';
 import { css } from '@emotion/react';
+import { UserAction } from '../../store/actions';
+import { Colors } from '../../styles/colors';
+import Head from 'next/head';
 
-const AuthFormStyles = {
-  Wrapper: css({
-    alignItems: 'center',
-    background: 'white',
-    padding: '15px 50px',
-    height: 300,
-    borderRadius: 15,
-    border: '1px solid #568ea6',
-    margin: 'auto',
-    color: '#4d4d4d',
-    // h1: {
-    // },
-  }),
-  AuthOptions: css({
-    display: 'flex',
-  }),
-  Section: css({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    width: '50%',
-    minWidth: 325,
-    padding: 10,
-  }),
-  Form: css({
-    // display: 'flex',
-    // justifyContent: 'center',
-  }),
-
-  FormElement: css({
-    marginBottom: 10,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  }),
-};
+export const REGISTER_MUTATION = gql`
+  mutation register($user: UserInput!) {
+    register(user: $user) {
+      id
+      email
+      name
+    }
+  }
+`;
 
 export const Register: NextPage = () => {
-  const { user } = useContext(Store);
+  const { user, dispatch } = useContext(Store);
   const router = useRouter();
+  const [register, { data, error, loading }] = useMutation(REGISTER_MUTATION);
 
-  // Users should not be able to access login or signup
-  if (user) {
-    router.replace('/');
-  }
+  useEffect(() => {
+    // Users should not be able to access login or signup
+    if (user && !data) {
+      router.replace('/');
+    }
+
+    if (data) {
+      dispatch({
+        type: UserAction.SET_USER,
+        payload: data as User,
+      });
+      router.replace('/');
+    }
+  }, [user, data, dispatch, router]);
+
+  const initialValues: UserInput = {
+    email: '',
+    password: '',
+    name: '',
+  };
 
   return (
-    <article css={AuthFormStyles.Wrapper}>
-      <h1>Create an account</h1>
-      <div css={AuthFormStyles.AuthOptions}>
-        <section css={AuthFormStyles.Section}>
-          <form css={AuthFormStyles.Form}>
-            <div css={AuthFormStyles.FormElement}>
-              <label htmlFor="email">Email</label>
-              <input placeholder="email@email.com" name="email" type="email" />
+    <article className="w-full h-full">
+      <Head>
+        <title>Register with Sentinel</title>
+      </Head>
+      <div className="grid md:grid-cols-6 lg:grid-cols-8">
+        <section className="bg-white md:col-start-2 md:col-span-4 lg:col-start-3 lg:col-span-4 md:rounded-xl md:shadow md:border p-6 md:mt-20">
+          <h1 className="text-2xl md:text-3xl font-bold mt-0">
+            Create a Sentinel account
+          </h1>
+          <div className="grid grid-cols-6 md:divide-x md:divide-gray-200">
+            <Formik
+              initialErrors={{
+                email: 'An account with that email already exists',
+              }}
+              initialValues={initialValues}
+              onSubmit={async (values: UserInput, helpers) => {
+                console.info(values);
+                if (values.email && values.password && values.name) {
+                  try {
+                    const res = await register({
+                      variables: {
+                        user: values,
+                      },
+                    });
+                    console.info(res);
+                  } catch (e) {
+                    console.error('err =>', e);
+                    if ((e.message as string) === 'Email already in use') {
+                      helpers.setFieldError(
+                        'email',
+                        'An account with that email already exists'
+                      );
+                    }
+                  }
+                }
+              }}
+            >
+              {({ errors }) => (
+                <Form className="flex flex-col col-span-6 md:col-span-4 pt-4 md:pr-10">
+                  <div className="flex flex-col items-start md:items-center justify-start mb-5">
+                    <div className="w-full flex flex-col items-start md:items-center justify-start md:flex-row">
+                      <label className="text-gray-700 text-lg" htmlFor="email">
+                        Email
+                      </label>
+                      <Field
+                        id="email"
+                        name="email"
+                        type="email"
+                        className="rounded-md w-full md:ml-4"
+                        placeholder="email@email.com"
+                      />
+                    </div>
+                    <ErrorMessage
+                      render={(errorMessage: string) => (
+                        <p className="text-red-600 text-center">
+                          {errorMessage}
+                        </p>
+                      )}
+                      name="email"
+                    />
+                  </div>
+                  <div className="flex flex-col items-start md:items-center justify-start md:flex-row mb-5">
+                    <label className="text-gray-700 text-lg" htmlFor="email">
+                      Name
+                    </label>
+                    <Field
+                      id="name"
+                      name="name"
+                      type="text"
+                      className="rounded-md w-full md:ml-4"
+                      placeholder="Full Name"
+                    />
+                  </div>
+                  <div className="flex flex-col items-start md:items-center justify-start md:flex-row mb-5">
+                    <label className="text-gray-700 text-lg" htmlFor="password">
+                      Password
+                    </label>
+                    <Field
+                      id="password"
+                      name="password"
+                      type="password"
+                      className="rounded-md w-full md:ml-4"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <button
+                    className="bg-blue-700 hover:bg-blue-800 rounded-md py-2 px-10 text-white"
+                    type="submit"
+                  >
+                    Create Account
+                  </button>
+                </Form>
+              )}
+            </Formik>
+
+            <div className="col-span-6 mt-5 md:mt-0 md:col-span-2 flex items-center pb-8 justify-center">
+              <Link href="/auth/login">
+                <a className="underline hover:text-blue-800">
+                  Already have an account?
+                </a>
+              </Link>
             </div>
-            <div css={AuthFormStyles.FormElement}>
-              <label htmlFor="password">Password</label>
-              <input placeholder="password" name="password" type="password" />
-            </div>
-          </form>
+          </div>
         </section>
-        {/* <section css={AuthFormStyles.Section}>
-          <div>Login with google</div>
-        </section> */}
       </div>
-      <Link href="/auth/login">
-        <a>Already have an account?</a>
-      </Link>
     </article>
   );
 };
 
-export default Register;
+export default withApollo(Register);
