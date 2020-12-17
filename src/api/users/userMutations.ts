@@ -26,7 +26,8 @@ export const userMutations: ResolverObj<'Mutation'> = {
       _,
       { user }: MutationRegisterArgs
     ): Promise<User | ApolloError> {
-      console.info('user args =>', [JSON.stringify(user)]);
+      const { password, ...safeToLog } = user;
+      console.info('user args =>', [JSON.stringify(safeToLog)]);
 
       const completeUser: User = {
         ...user,
@@ -38,6 +39,13 @@ export const userMutations: ResolverObj<'Mutation'> = {
       };
 
       const usersRef = dbConnection().collection(withNamespace('users'));
+
+      console.info(
+        '[namespace] => ',
+        withNamespace('users'),
+        '[ref] =>',
+        usersRef
+      );
 
       try {
         // Call `.create(doc)` instead of `.set` if you want to guarantee a unique email.
