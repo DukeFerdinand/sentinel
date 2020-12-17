@@ -26,9 +26,6 @@ export const userMutations: ResolverObj<'Mutation'> = {
       _,
       { user }: MutationRegisterArgs
     ): Promise<User | ApolloError> {
-      const { password, ...safeToLog } = user;
-      console.info('user args =>', [JSON.stringify(safeToLog)]);
-
       const completeUser: User = {
         ...user,
         password: await bcrypt.hash(
