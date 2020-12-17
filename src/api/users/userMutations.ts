@@ -61,7 +61,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
         ) {
           return new ApolloError('Email already in use');
         }
-        console.error(error);
+        console.error('[ERROR HERE] =>', error.message);
       }
       return new ApolloError('Something went wrong');
     },
