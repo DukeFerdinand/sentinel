@@ -7,13 +7,13 @@ const Organizations: NextPage = () => {
   const { user } = useContext(Store);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!user) {
-      router.push('/auth/login');
-    }
-  }, [user, router]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     router.push('/auth/login');
+  //   }
+  // }, [user, router]);
 
-  return <div>Orgs</div>;
+  return <div>Orgs for {user?.name}</div>;
 };
 
 export default Organizations;

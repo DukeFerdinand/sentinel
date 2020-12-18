@@ -9,8 +9,11 @@ import {
   UserLogin,
   MutationLoginArgs,
   MutationRegisterArgs,
+  MutationValidateArgs,
 } from '../../@generated/graphql';
 import { dbConnection } from '../../lib/firestore';
+import { sign } from '../utils/jwt';
+import { storage } from '../../lib/storageBucket';
 
 const comparePassword = async (
   attempt: UserLogin,
@@ -41,9 +44,17 @@ export const userMutations: ResolverObj<'Mutation'> = {
         // Call `.create(doc)` instead of `.set` if you want to guarantee a unique email.
         await usersRef.doc(completeUser.email).create(completeUser);
 
+        // await storage.bucket('sentinel-api-dev-bucket').upload('filename', {
+        //   gzip: true,
+        // });
+
         // completeUser matches the saved document _exactly_, so instead of doing another request
         // just send back with the new id
-        return completeUser;
+        const user: User = {
+          ...completeUser,
+          token: sign(completeUser),
+        };
+        return user;
       } catch (error) {
         if (
           error.message &&
@@ -69,7 +80,11 @@ export const userMutations: ResolverObj<'Mutation'> = {
 
           // Data is undefined if there's no match, compare in same check for less "if/else" overhead
           if (data && (await comparePassword(user, data as User))) {
-            return data as User;
+            const user: User = {
+              ...(data as User),
+              token: sign(data),
+            };
+            return user;
           }
 
           // We don't need a distinction between failed email and failed password for login
@@ -84,5 +99,6 @@ export const userMutations: ResolverObj<'Mutation'> = {
 
       return new ApolloError('Error fetching user');
     },
+    validate: async (_, { token }: MutationValidateArgs) => {},
   },
 };

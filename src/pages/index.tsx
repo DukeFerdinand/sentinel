@@ -4,12 +4,8 @@ import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
 
 import { Store } from '../store';
-import { userCheck, UserCheckState } from '../hoc/withUser';
 import Link from 'next/link';
-
-interface HomeProps {
-  userCheckStatus: UserCheckState;
-}
+import Head from 'next/head';
 
 export const HELLO_QUERY = gql`
   query HelloQuery {
@@ -17,12 +13,15 @@ export const HELLO_QUERY = gql`
   }
 `;
 
-export const Home: NextPage<HomeProps> = ({ userCheckStatus }) => {
+export const Home: NextPage = () => {
   const { user } = useContext(Store);
   const router = useRouter();
 
   return (
     <div>
+      <Head>
+        <title>Welcome to Sentinel</title>
+      </Head>
       Welcome to sentinel!
       <Link href="/auth/login">
         <a>Go to login</a>
@@ -31,4 +30,4 @@ export const Home: NextPage<HomeProps> = ({ userCheckStatus }) => {
   );
 };
 
-export default userCheck(Home);
+export default Home;

@@ -5,12 +5,10 @@ import { useContext, useEffect } from 'react';
 import { Store } from '../../store';
 import gql from 'graphql-tag';
 import { withApollo } from '../../lib/apollo';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { User, UserInput, UserLogin } from '../../@generated/graphql';
-import { css } from '@emotion/react';
+import { User, UserInput } from '../../@generated/graphql';
 import { UserAction } from '../../store/actions';
-import { Colors } from '../../styles/colors';
 import Head from 'next/head';
 
 export const REGISTER_MUTATION = gql`
@@ -31,17 +29,9 @@ export const Register: NextPage = () => {
   useEffect(() => {
     // Users should not be able to access login or signup
     if (user && !data) {
-      router.replace('/');
+      router.replace('/projects');
     }
-
-    if (data) {
-      dispatch({
-        type: UserAction.SET_USER,
-        payload: data as User,
-      });
-      router.replace('/');
-    }
-  }, [user, data, dispatch, router]);
+  }, [user, data, router]);
 
   const initialValues: UserInput = {
     email: '',
@@ -66,7 +56,6 @@ export const Register: NextPage = () => {
               }}
               initialValues={initialValues}
               onSubmit={async (values: UserInput, helpers) => {
-                console.info(values);
                 if (values.email && values.password && values.name) {
                   try {
                     const res = await register({
@@ -74,7 +63,11 @@ export const Register: NextPage = () => {
                         user: values,
                       },
                     });
-                    console.info(res);
+                    dispatch({
+                      type: UserAction.SET_USER,
+                      payload: res.data.register as User,
+                    });
+                    router.replace('/projects');
                   } catch (e) {
                     console.error('err =>', e);
                     if ((e.message as string) === 'Email already in use') {

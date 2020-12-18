@@ -4,11 +4,12 @@ import { GlobalStyles } from '../styles/globals';
 import { AppBar } from './AppBar';
 import { useContext } from 'react';
 import { Store } from '../store';
+import { Navbar } from './Navbar/Navbar';
 
 const Layout: React.FC = ({ children }) => {
   const { user } = useContext(Store);
   return (
-    <main className="h-screen flex">
+    <main className="h-screen">
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
@@ -20,10 +21,11 @@ const Layout: React.FC = ({ children }) => {
       <Global styles={GlobalStyles} />
 
       {/* Then any top level components */}
+      <Navbar />
       {user && <AppBar />}
 
       {/* THEN the main flow */}
-      {children}
+      <div className="pt-16">{children}</div>
     </main>
   );
 };

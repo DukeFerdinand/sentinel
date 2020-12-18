@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { Firestore } from '@google-cloud/firestore';
 
-const getDecryptedSecret = (): Record<string, unknown> => {
+export const getDecryptedSecret = (): Record<string, unknown> => {
   if (
     process.env.GCLOUD_ENCRYPTION_KEY &&
     process.env.GCLOUD_ENCRYPTION_IV &&

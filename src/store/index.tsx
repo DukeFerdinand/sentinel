@@ -1,13 +1,10 @@
 import React, { createContext, Reducer, useReducer } from 'react';
+import { User } from '../@generated/graphql';
 import { UserAction } from './actions';
 
 export interface AppState {
   user?: User;
   dispatch: React.Dispatch<Action>;
-}
-
-export interface User {
-  username: string;
 }
 
 // Coercion here vs typing to avoid adding optional values
@@ -22,7 +19,12 @@ export const Store = createContext<AppState>(initialState);
 
 const { Provider } = Store;
 
-export const StateProvider: React.FC = ({ children }) => {
+type StateProviderProps = Omit<AppState, 'dispatch'>;
+
+export const StateProvider: React.FC<StateProviderProps> = ({
+  children,
+  ...stateProps
+}) => {
   const [state, dispatch] = useReducer<Reducer<AppState, Action>>(
     (state, action) => {
       switch (action.type) {
@@ -33,7 +35,10 @@ export const StateProvider: React.FC = ({ children }) => {
           return state;
       }
     },
-    initialState
+    // Merge state props and initial state.
+    // NOTE: If initial state has real data at some point in the future,
+    // put the more important one SECOND
+    { ...initialState, ...stateProps }
   );
 
   return <Provider value={{ ...state, dispatch }}>{children}</Provider>;

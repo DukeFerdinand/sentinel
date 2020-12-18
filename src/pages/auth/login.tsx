@@ -11,7 +11,7 @@ import { Store } from '../../store';
 import { User, UserLogin } from '../../@generated/graphql';
 import { withApollo } from '../../lib/apollo';
 import { UserAction } from '../../store/actions';
-import { Colors } from '../../styles/colors';
+import { setCookie } from '../../utils/cookies';
 
 export const LOGIN_MUTATION = gql`
   mutation Login($user: UserLogin!) {
@@ -19,6 +19,7 @@ export const LOGIN_MUTATION = gql`
       id
       email
       name
+      token
     }
   }
 `;
@@ -26,22 +27,14 @@ export const LOGIN_MUTATION = gql`
 export const Login: NextPage = () => {
   const { user, dispatch } = useContext(Store);
   const router = useRouter();
-  const [login, { data, error, loading }] = useMutation(LOGIN_MUTATION);
+  const [login, { data }] = useMutation(LOGIN_MUTATION);
 
   useEffect(() => {
     // Users should not be able to access login or signup
     if (user && !data) {
-      router.replace('/');
+      router.replace('/projects');
     }
-
-    if (data) {
-      dispatch({
-        type: UserAction.SET_USER,
-        payload: data as User,
-      });
-      router.replace('/organizations');
-    }
-  }, [user, data, dispatch, router]);
+  }, [user, data, router]);
 
   const initialValues: UserLogin = {
     email: '',
@@ -59,14 +52,40 @@ export const Login: NextPage = () => {
           <div className="grid grid-cols-6 md:divide-x md:divide-gray-200">
             <Formik
               initialValues={initialValues}
-              onSubmit={(values: UserLogin) => {
-                console.info(values);
+              onSubmit={async (values: UserLogin, { setErrors }) => {
                 if (values.email && values.password) {
-                  login({
-                    variables: {
-                      user: values,
-                    },
-                  });
+                  try {
+                    const res = await login({
+                      variables: {
+                        user: values,
+                        genToken: true,
+                      },
+                    });
+                    if (res.data) {
+                      const { token, ...user } = res.data.login as User;
+
+                      // Set token for future use
+                      setCookie({
+                        key: 'api_token',
+                        data: token,
+                      });
+
+                      // Use the returned data
+                      dispatch({
+                        type: UserAction.SET_USER,
+                        payload: user,
+                      });
+                      router.push('/projects');
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    if (e.message === 'Username or password are incorrect') {
+                      setErrors({
+                        email: 'Email or password incorrect',
+                        password: 'Email or password incorrect',
+                      });
+                    }
+                  }
                 }
               }}
             >

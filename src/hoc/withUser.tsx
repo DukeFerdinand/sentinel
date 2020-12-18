@@ -2,9 +2,10 @@ import { FC, Fragment, useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { withApollo } from '../lib/apollo';
 import { gql, useQuery } from '@apollo/client';
-import { Store, User } from '../store';
+import { Store } from '../store';
 import { UserAction } from '../store/actions';
 import { useRouter } from 'next/dist/client/router';
+import { User } from '../@generated/graphql';
 
 export const USER_QUERY = gql`
   query UserQuery {
@@ -16,12 +17,10 @@ export const USER_QUERY = gql`
 `;
 
 // Temp array of routes
-const ProtectedRoutes = ['/app'];
+const ProtectedRoutes = ['/projects'];
 
 const isProtectedRoute = (route: string): boolean => {
   for (const pr of ProtectedRoutes) {
-    console.info(pr);
-
     if (pr.includes(route) && route !== '/') {
       return true;
     }
@@ -36,7 +35,9 @@ export enum UserCheckState {
   Error,
 }
 
-type PageWithUserCheck = FC<{ userCheckStatus: UserCheckState }>;
+type PageWithUserCheck =
+  | FC<{ userCheckStatus: UserCheckState }>
+  | React.ComponentClass<{ userCheckStatus: UserCheckState }>;
 
 export const userCheck = (PageComponent: PageWithUserCheck): NextPage => {
   const UserCheck: NextPage = (props) => {
