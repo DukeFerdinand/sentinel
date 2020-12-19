@@ -31,7 +31,6 @@ export const getCookies = <T extends DefaultObject>(
   else if (typeof window !== 'undefined')
     pairs = window.document.cookie.split(';');
   else {
-    console.warn(new Error('No cookie source found'));
     return undefined;
   }
 
@@ -41,10 +40,6 @@ export const getCookies = <T extends DefaultObject>(
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i].split('=');
     if ((pair[0] + '').trim() === '') {
-      console.warn(
-        '[ COOKIE PARSE ] Got empty key when parsing cookies, please check you have set them properly'
-      );
-
       //? If we don't break here, a useless object is returned that looks something like this:
       //? {
       //?    "": "undefined"

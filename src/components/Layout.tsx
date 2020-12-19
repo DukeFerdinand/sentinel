@@ -1,18 +1,26 @@
 import Head from 'next/head';
 import { Global } from '@emotion/react';
+import { useContext, useEffect, useState, Fragment } from 'react';
+import { RequestMethods, smartFetch } from '@dukeferdinand/ts-utils/dist/fetch';
+
 import { GlobalStyles } from '../styles/globals';
 import { AppBar } from './AppBar';
-import { useContext, useEffect } from 'react';
 import { Store } from '../store';
 import { Navbar } from './Navbar/Navbar';
-import { RequestMethods, smartFetch } from '@dukeferdinand/ts-utils/dist/fetch';
 import { getCookies, setCookie } from '../utils/cookies';
 import { withUrl } from '../utils/withUrl';
 import { User } from '../@generated/graphql';
 import { UserAction } from '../store/actions';
+import { FullScreenLoader } from './FullScreenLoader';
 
 const Layout: React.FC = ({ children }) => {
   const { user, dispatch } = useContext(Store);
+
+  // Only trigger loader if on server or an api token exists
+  const initialLoadingState =
+    !!getCookies<{ api_token: string }>()?.api_token ||
+    typeof window === 'undefined';
+  const [layoutLoading, setLoading] = useState(initialLoadingState);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -40,17 +48,21 @@ const Layout: React.FC = ({ children }) => {
               payload: res.unwrap(),
             });
           } else {
+            // If we get to this point, the key is bad or expired, so destroy it
             setCookie({
               key: 'api_token',
               data: undefined,
             });
           }
+
+          // Async actions are done
+          setLoading(false);
         }
       }
     };
 
     checkToken();
-  }, [user, dispatch]);
+  }, [user, dispatch, layoutLoading, setLoading]);
 
   return (
     <main className="h-screen">
@@ -64,12 +76,18 @@ const Layout: React.FC = ({ children }) => {
       {/* Global style zone first */}
       <Global styles={GlobalStyles} />
 
-      {/* Then any top level components */}
-      <Navbar />
-      {user && <AppBar />}
+      {layoutLoading ? (
+        <FullScreenLoader />
+      ) : (
+        <Fragment>
+          {/* Then any top level components */}
+          <Navbar user={user} />
+          {user && <AppBar />}
 
-      {/* THEN the main flow */}
-      <div className="pt-16">{children}</div>
+          {/* THEN the main flow */}
+          <div className="pt-5">{children}</div>
+        </Fragment>
+      )}
     </main>
   );
 };
