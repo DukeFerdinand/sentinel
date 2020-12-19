@@ -6,7 +6,7 @@ export const FullScreenLoader: React.FC = () => {
         <h1 className="text-3xl">Sentinel</h1>
       </div>
       <div className="flex flex-grow items-center justify-center">
-        Loading projects...
+        Loading application...
       </div>
     </div>
   );
