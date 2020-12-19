@@ -24,8 +24,18 @@ export const setCookie = (cookieData: {
 
 export const getCookies = <T extends DefaultObject>(
   cookieString?: string
-): T => {
-  const pairs = cookieString?.split(';') || window.document.cookie.split(';');
+): T | undefined => {
+  let pairs = new Array<string>();
+
+  if (cookieString) pairs = cookieString.split(';');
+  else if (typeof window !== 'undefined')
+    pairs = window.document.cookie.split(';');
+  else {
+    console.warn(new Error('No cookie source found'));
+    return undefined;
+  }
+
+  cookieString?.split(';') || window.document.cookie.split(';');
   const cookies: Record<string, unknown> = {};
 
   for (let i = 0; i < pairs.length; i++) {

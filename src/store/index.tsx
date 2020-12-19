@@ -19,7 +19,7 @@ export const Store = createContext<AppState>(initialState);
 
 const { Provider } = Store;
 
-type StateProviderProps = Omit<AppState, 'dispatch'>;
+export type StateProviderProps = Omit<AppState, 'dispatch'>;
 
 export const StateProvider: React.FC<StateProviderProps> = ({
   children,

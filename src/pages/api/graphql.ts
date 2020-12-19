@@ -6,7 +6,7 @@ const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    console.info('[req] => ', req.headers.cookie.split('=')[1]);
+    console.info('[req] => ', req.cookies);
   },
 });
 

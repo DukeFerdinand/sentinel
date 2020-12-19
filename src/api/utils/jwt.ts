@@ -1,4 +1,3 @@
-import { err, ok, Result } from '@dukeferdinand/ts-results';
 import jwt from 'jsonwebtoken';
 import { DefaultObject } from '../../@types/structures';
 
@@ -25,28 +24,15 @@ export const sign = <T extends string | DefaultObject | Buffer>(
   const { expires, key, algorithm } = getEnv();
   return jwt.sign(payload, key, {
     algorithm,
-    expiresIn: expires,
+    expiresIn: '7 days',
   });
 };
 
-export const validate = async <T extends string | DefaultObject>(
+export const validate = <T extends string | DefaultObject>(
   token: string
-): Promise<Result<T, Error>> => {
+): T => {
   const { key, algorithm } = getEnv();
-  return new Promise((res, rej) => {
-    jwt.verify(
-      token,
-      key,
-      {
-        algorithms: [algorithm],
-      },
-      (error, obj) => {
-        if (error) {
-          rej(err(error));
-        } else {
-          res(ok(obj as T));
-        }
-      }
-    );
-  });
+  return jwt.verify(token, key, {
+    algorithms: [algorithm],
+  }) as T;
 };

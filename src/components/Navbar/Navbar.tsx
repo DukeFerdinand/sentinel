@@ -20,8 +20,8 @@ const RegistrationLinks = () => {
 const AuthenticatedSection = () => {
   return (
     <>
-      <Link href="/auth/login">
-        <a className="mx-2 inline">Organizations</a>
+      <Link href="/projects">
+        <a className="mx-2 inline">Projects</a>
       </Link>
       <div>
         <ProfileDropdown />
@@ -32,7 +32,6 @@ const AuthenticatedSection = () => {
 
 export const Navbar: React.FC = () => {
   const { user } = useContext(Store);
-  console.info(user);
   return (
     <nav className="flex fixed w-full items-center justify-between px-6 h-16 bg-white text-gray-700 border-b border-gray-200 z-10">
       <div>
