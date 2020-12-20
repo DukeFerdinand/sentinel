@@ -15,7 +15,12 @@ const ProjectIssues: NextPage = () => {
   return (
     <ProjectLayout title="">
       <Fragment>
-        <div>Selected: {router.query.projectName}</div>
+        <div className="flex flex-row">
+          <h2 className="text-2xl">Issues</h2>
+        </div>
+        <div className="flex">
+          Config: {JSON.stringify(router.query.project)}
+        </div>
       </Fragment>
     </ProjectLayout>
   );
