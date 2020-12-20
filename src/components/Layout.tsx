@@ -65,7 +65,7 @@ const Layout: React.FC = ({ children }) => {
   }, [user, dispatch, layoutLoading, setLoading]);
 
   return (
-    <main className="h-screen">
+    <main className="h-screen flex flex-col">
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
@@ -85,7 +85,7 @@ const Layout: React.FC = ({ children }) => {
           {user && <AppBar />}
 
           {/* THEN the main flow */}
-          <div className="pt-5">{children}</div>
+          <div className="flex-grow">{children}</div>
         </Fragment>
       )}
     </main>
