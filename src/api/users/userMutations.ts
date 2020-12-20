@@ -13,7 +13,6 @@ import {
 } from '../../@generated/graphql';
 import { dbConnection } from '../../lib/firestore';
 import { sign } from '../utils/jwt';
-import { storage } from '../../lib/storageBucket';
 
 const comparePassword = async (
   attempt: UserLogin,

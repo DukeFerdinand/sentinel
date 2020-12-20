@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 import { mergeTypeDefs } from 'graphql-tools';
 import User from './users/User.graphql';
+import Project from './projects/Project.graphql';
 
 const inFileTypeDefs = gql`
   type Query {
@@ -13,4 +14,5 @@ export default mergeTypeDefs([
   inFileTypeDefs,
   // GraphQL files
   User,
+  Project,
 ]);

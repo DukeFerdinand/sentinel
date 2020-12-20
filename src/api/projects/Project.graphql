@@ -1,0 +1,21 @@
+type Project {
+  id: ID!
+  createdBy: ID!
+  name: String!
+  language: String!
+}
+
+input ProjectInput {
+  createdBy: ID!
+  name: String!
+  language: String!
+}
+
+type Mutation {
+  newProject(projectInfo: ProjectInput!): Project
+}
+
+type Query {
+  project(id: ID!): Project
+  projects(limit: Int): [Project]
+}

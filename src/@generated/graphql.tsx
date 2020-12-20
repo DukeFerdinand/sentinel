@@ -19,6 +19,18 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   sayHello?: Maybe<Scalars['String']>;
+  project?: Maybe<Project>;
+  projects?: Maybe<Array<Maybe<Project>>>;
+};
+
+
+export type QueryProjectArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryProjectsArgs = {
+  limit?: Maybe<Scalars['Int']>;
 };
 
 export type User = {
@@ -47,6 +59,7 @@ export type Mutation = {
   register?: Maybe<User>;
   login?: Maybe<User>;
   validate?: Maybe<User>;
+  newProject?: Maybe<Project>;
 };
 
 
@@ -64,6 +77,25 @@ export type MutationLoginArgs = {
 
 export type MutationValidateArgs = {
   token: Scalars['String'];
+};
+
+
+export type MutationNewProjectArgs = {
+  projectInfo: ProjectInput;
+};
+
+export type Project = {
+  __typename?: 'Project';
+  id: Scalars['ID'];
+  createdBy: Scalars['ID'];
+  name: Scalars['String'];
+  language: Scalars['String'];
+};
+
+export type ProjectInput = {
+  createdBy: Scalars['ID'];
+  name: Scalars['String'];
+  language: Scalars['String'];
 };
 
 export enum CacheControlScope {
@@ -152,12 +184,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  User: ResolverTypeWrapper<User>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
   UserLogin: UserLogin;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Project: ResolverTypeWrapper<Project>;
+  ProjectInput: ProjectInput;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
 };
@@ -166,17 +201,22 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Query: {};
   String: Scalars['String'];
-  User: User;
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
+  User: User;
   UserInput: UserInput;
   UserLogin: UserLogin;
   Mutation: {};
   Boolean: Scalars['Boolean'];
+  Project: Project;
+  ProjectInput: ProjectInput;
   Upload: Scalars['Upload'];
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   sayHello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>;
+  projects?: Resolver<Maybe<Array<Maybe<ResolversTypes['Project']>>>, ParentType, ContextType, RequireFields<QueryProjectsArgs, never>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -192,6 +232,15 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   register?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, 'user'>>;
   login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'user'>>;
   validate?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationValidateArgs, 'token'>>;
+  newProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationNewProjectArgs, 'projectInfo'>>;
+};
+
+export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdBy?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -202,6 +251,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Project?: ProjectResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };
 
