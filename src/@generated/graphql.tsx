@@ -20,17 +20,18 @@ export type Query = {
   __typename?: 'Query';
   sayHello?: Maybe<Scalars['String']>;
   project?: Maybe<Project>;
-  projects?: Maybe<Array<Maybe<Project>>>;
+  projects: Array<Maybe<Project>>;
 };
 
 
 export type QueryProjectArgs = {
-  id: Scalars['ID'];
+  name: Scalars['String'];
 };
 
 
 export type QueryProjectsArgs = {
   limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
 };
 
 export type User = {
@@ -60,6 +61,7 @@ export type Mutation = {
   login?: Maybe<User>;
   validate?: Maybe<User>;
   newProject?: Maybe<Project>;
+  deleteProject: Scalars['Boolean'];
 };
 
 
@@ -84,12 +86,24 @@ export type MutationNewProjectArgs = {
   projectInfo: ProjectInput;
 };
 
+
+export type MutationDeleteProjectArgs = {
+  name: Scalars['String'];
+};
+
 export type Project = {
   __typename?: 'Project';
   id: Scalars['ID'];
   createdBy: Scalars['ID'];
   name: Scalars['String'];
   language: Scalars['String'];
+};
+
+export type Paging = {
+  __typename?: 'Paging';
+  current: Scalars['Int'];
+  count: Scalars['Int'];
+  offset: Scalars['Int'];
 };
 
 export type ProjectInput = {
@@ -184,14 +198,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   User: ResolverTypeWrapper<User>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   UserInput: UserInput;
   UserLogin: UserLogin;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Project: ResolverTypeWrapper<Project>;
+  Paging: ResolverTypeWrapper<Paging>;
   ProjectInput: ProjectInput;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
@@ -201,22 +216,23 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Query: {};
   String: Scalars['String'];
-  ID: Scalars['ID'];
   Int: Scalars['Int'];
   User: User;
+  ID: Scalars['ID'];
   UserInput: UserInput;
   UserLogin: UserLogin;
   Mutation: {};
   Boolean: Scalars['Boolean'];
   Project: Project;
+  Paging: Paging;
   ProjectInput: ProjectInput;
   Upload: Scalars['Upload'];
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   sayHello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>;
-  projects?: Resolver<Maybe<Array<Maybe<ResolversTypes['Project']>>>, ParentType, ContextType, RequireFields<QueryProjectsArgs, never>>;
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'name'>>;
+  projects?: Resolver<Array<Maybe<ResolversTypes['Project']>>, ParentType, ContextType, RequireFields<QueryProjectsArgs, never>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -233,6 +249,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'user'>>;
   validate?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationValidateArgs, 'token'>>;
   newProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationNewProjectArgs, 'projectInfo'>>;
+  deleteProject?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'name'>>;
 };
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = {
@@ -240,6 +257,13 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   createdBy?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PagingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Paging'] = ResolversParentTypes['Paging']> = {
+  current?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  offset?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -252,6 +276,7 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
+  Paging?: PagingResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };
 

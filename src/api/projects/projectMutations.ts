@@ -1,10 +1,15 @@
 import { ApolloError } from 'apollo-server-micro';
 import { v4 as uuidGen } from 'uuid';
 
-import { MutationNewProjectArgs, Project } from '../../@generated/graphql';
+import {
+  MutationDeleteProjectArgs,
+  MutationNewProjectArgs,
+  Project,
+} from '../../@generated/graphql';
 import { ResolverContext } from '../../@types/resolvers';
 import { ResolverObj } from '../../@types/structures';
 import { dbConnection } from '../../lib/firestore';
+import { formatProjectName, projectsPath } from '../utils';
 
 export const projectMutations: ResolverObj<'Mutation'> = {
   Mutation: {
@@ -25,11 +30,11 @@ export const projectMutations: ResolverObj<'Mutation'> = {
           // Technically NoSQL like this means that a user might not have a 'projects' collection yet
           // but Firestore is like Mongo in that it creates one on demand
           const projectsCollection = dbConnection().collection(
-            `users/${user.email}/projects`
+            projectsPath(user.email)
           );
 
           await projectsCollection
-            .doc(project.name.toLowerCase().replaceAll(' ', '-'))
+            .doc(formatProjectName(project.name))
             .create(project);
 
           return project;
@@ -43,6 +48,31 @@ export const projectMutations: ResolverObj<'Mutation'> = {
             );
           }
           return new ApolloError('Error creating project', '500');
+        }
+      }
+
+      return new ApolloError('Authorized user required', '403');
+    },
+    async deleteProject(
+      _,
+      { name }: MutationDeleteProjectArgs,
+      ctx: ResolverContext
+    ): Promise<boolean | ApolloError> {
+      if (ctx.user) {
+        // This info is needed for permissions/assignment
+        const user = ctx.user;
+
+        try {
+          const projectsCollection = dbConnection().collection(
+            projectsPath(user.email)
+          );
+
+          await projectsCollection.doc(formatProjectName(name)).delete();
+
+          return true;
+        } catch (e) {
+          console.error(e);
+          return new ApolloError('Error deleting project', '500');
         }
       }
 

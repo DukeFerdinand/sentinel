@@ -5,6 +5,12 @@ type Project {
   language: String!
 }
 
+type Paging {
+  current: Int!
+  count: Int!
+  offset: Int!
+}
+
 input ProjectInput {
   createdBy: ID!
   name: String!
@@ -13,9 +19,10 @@ input ProjectInput {
 
 type Mutation {
   newProject(projectInfo: ProjectInput!): Project
+  deleteProject(name: String!): Boolean!
 }
 
 type Query {
-  project(id: ID!): Project
-  projects(limit: Int): [Project]
+  project(name: String!): Project
+  projects(limit: Int, offset: Int): [Project]!
 }
