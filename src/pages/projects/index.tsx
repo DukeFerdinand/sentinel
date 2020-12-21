@@ -13,7 +13,6 @@ import { ProjectStore } from '../../store/projects';
 const ProjectsPage: React.FC<{ user?: User }> = ({ user }) => {
   const { projects } = useContext(ProjectStore);
 
-  console.info('[ /projects ] => ', projects);
   return (
     <Fragment>
       <div className="w-full flex flex-row items-center justify-between">
