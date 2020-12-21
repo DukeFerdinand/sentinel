@@ -54,10 +54,9 @@ const Layout: React.FC = ({ children }) => {
               type: UserAction.SET_USER,
               payload: res.unwrap(),
             });
-
             for (const r of AuthNotAllowed) {
               if (r.exec(router.pathname)) {
-                router.replace('/');
+                router.replace('/projects');
                 break;
               }
             }
@@ -83,7 +82,7 @@ const Layout: React.FC = ({ children }) => {
     };
 
     checkToken();
-  }, [user, dispatch, layoutLoading, setLoading]);
+  }, [user, router, dispatch, layoutLoading, setLoading]);
 
   return (
     <main className="h-screen flex flex-col">
@@ -96,6 +95,13 @@ const Layout: React.FC = ({ children }) => {
         <link
           href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto:wght@300;400&display=swap"
           rel="stylesheet"
+        />
+
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+          crossOrigin="anonymous"
         />
       </Head>
       {/* Global style zone first */}
