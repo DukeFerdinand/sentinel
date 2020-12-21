@@ -56,7 +56,6 @@ const Layout: React.FC = ({ children }) => {
             });
 
             for (const r of AuthNotAllowed) {
-              console.info('matching => ', r);
               if (r.exec(router.pathname)) {
                 router.replace('/');
                 break;
