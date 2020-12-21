@@ -10,10 +10,12 @@ export const ProjectManagementBar: React.FC = () => {
         {project?.name} <i className="material-icons">keyboard_arrow_down</i>
       </div>
       <div className="flex items-center justify-between px-4 hover:bg-gray-100 cursor-pointer">
-        Environment Name <i className="material-icons">keyboard_arrow_down</i>
+        Environment Name <span className="text-gray-400">(coming soon)</span>
+        <i className="material-icons">keyboard_arrow_down</i>
       </div>
       <div className="flex items-center justify-between px-4 hover:bg-gray-100 cursor-pointer">
-        Time Selection <i className="material-icons">keyboard_arrow_down</i>
+        Time Selection <span className="text-gray-400">(coming soon)</span>
+        <i className="material-icons">keyboard_arrow_down</i>
       </div>
     </div>
   );
