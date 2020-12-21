@@ -13,7 +13,7 @@ const ProjectIssues: NextPage = () => {
   const router = useRouter();
 
   return (
-    <ProjectLayout title="">
+    <ProjectLayout title="Add project title here" showManagementBar={true}>
       <Fragment>
         <div className="flex flex-row">
           <h2 className="text-2xl">Issues</h2>

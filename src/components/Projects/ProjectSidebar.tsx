@@ -1,5 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import Link from 'next/link';
+import { useContext } from 'react';
+import { ProjectStore } from '../../store/projects';
 
 interface LinkConfig {
   href: string;

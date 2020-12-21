@@ -2,3 +2,9 @@ export enum UserAction {
   SET_USER = 'SET_USER',
   LOGOUT = 'LOGOUT',
 }
+
+export enum ProjectAction {
+  INIT_STATE = 'INIT_STATE',
+  SELECT_PROJECT = 'SELECT_PROJECT',
+  SET_AVAILABLE_PROJECTS = 'SET_AVAILABLE_PROJECTS',
+}
