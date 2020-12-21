@@ -12,9 +12,16 @@ import { withUrl } from '../utils/withUrl';
 import { User } from '../@generated/graphql';
 import { UserAction } from '../store/actions';
 import { FullScreenLoader } from './FullScreenLoader';
+import { useRouter } from 'next/dist/client/router';
+
+// Patterns to apply to current route to see if user needs redirecting or not
+const ProtectedRoutes = [/^\/projects/];
+
+const AuthNotAllowed = [/^\/$/, /^\/auth/];
 
 const Layout: React.FC = ({ children }) => {
   const { user, dispatch } = useContext(Store);
+  const router = useRouter();
 
   // Only trigger loader if on server or an api token exists
   const initialLoadingState =
@@ -47,12 +54,27 @@ const Layout: React.FC = ({ children }) => {
               type: UserAction.SET_USER,
               payload: res.unwrap(),
             });
+
+            for (const r of AuthNotAllowed) {
+              console.info('matching => ', r);
+              if (r.exec(router.pathname)) {
+                router.replace('/');
+                break;
+              }
+            }
           } else {
             // If we get to this point, the key is bad or expired, so destroy it
             setCookie({
               key: 'api_token',
               data: undefined,
             });
+
+            for (const r of ProtectedRoutes) {
+              if (r.exec(router.pathname)) {
+                router.replace('/');
+                break;
+              }
+            }
           }
 
           // Async actions are done
