@@ -48,14 +48,17 @@ export const ProjectSidebar: React.FC = () => {
             isCurrentRoute = router.pathname.includes(link.href);
           }
 
-          const activeClass = `w-3 h-full rounded-md relative mr-2 -left-1 bg-${
-            isCurrentRoute ? 'green' : 'gray'
-          }-300`;
           return (
             <Link key={`projects-sidebar-${link.href}`} href={link.href}>
               <a className="w-full h-10 mb-2 pr-4 bg-white hover:bg-gray-100 overflow-hidden flex flex-row items-center rounded-md">
                 {/* Selection indicator */}
-                <div className={activeClass}></div>
+
+                {/* Only need to split out like this because of tailwind's purge feature. The color was breaking in prod */}
+                {isCurrentRoute ? (
+                  <div className="w-3 h-full rounded-md relative mr-2 -left-1 bg-green-300"></div>
+                ) : (
+                  <div className="w-3 h-full rounded-md relative mr-2 -left-1 bg-gray-300"></div>
+                )}
                 <i className="material-icons">{link.icon}</i>
                 <span className="mx-auto">{link.text}</span>
               </a>
