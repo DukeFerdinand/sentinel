@@ -24,7 +24,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         <h3 className="text-2xl">{project.name}</h3>
 
         <Link href={`/projects/issues/${formatProjectName(project.name)}`}>
-          <a className="ml-auto">Open Project</a>
+          <a className="ml-auto  hover:text-blue-800">Open Issues</a>
         </Link>
       </div>
       <div className="flex flex-col">

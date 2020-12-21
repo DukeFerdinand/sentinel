@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Store } from '../../store';
 
-export const ProfileDropdown = () => {
+export const ProfileDropdown: React.FC = () => {
   const { user } = useContext(Store);
   return (
     <div className="flex mx-4 items-center cursor-pointer hover:bg-gray-100 rounded-md p-1 justify-between">
