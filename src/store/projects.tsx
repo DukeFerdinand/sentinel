@@ -27,7 +27,6 @@ export const ProjectStateProvider: React.FC<StateProviderProps> = ({
   children,
   ...stateProps
 }) => {
-  console.info('[stateProps] => ', stateProps);
   const [state, dispatch] = useReducer<Reducer<ProjectState, Action>>(
     (state, action) => {
       switch (action.type) {
@@ -50,9 +49,6 @@ export const ProjectStateProvider: React.FC<StateProviderProps> = ({
     // put the more important one SECOND
     { ...initialState, ...stateProps }
   );
-
-  console.info('[state] =>', state);
-  console.info('[value={}] =>', { ...state, ...stateProps, dispatch });
 
   return (
     <Provider value={{ ...state, ...stateProps, dispatch }}>
