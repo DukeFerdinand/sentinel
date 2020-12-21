@@ -23,7 +23,7 @@ const ProjectsPage: React.FC<{ user?: User }> = ({ user }) => {
           </a>
         </Link>
       </div>
-      <div className="flex flex-row pt-4">
+      <div className="flex flex-row flex-wrap pt-4">
         {projects
           ? projects.map((project) => {
               return (

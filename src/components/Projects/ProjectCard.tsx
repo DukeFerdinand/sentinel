@@ -13,7 +13,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   skeleton,
 }) => {
   return project ? (
-    <div className="rounded-md border shadow-md xs:w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/3 pb-4">
+    <div className="rounded-md border shadow-md xs:w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/4 pb-4 m-2">
       <div className="flex flex-row items-center mb-4 pt-5 px-5">
         {/* TEMPORARY IMAGE */}
         <img

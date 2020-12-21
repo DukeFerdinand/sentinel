@@ -5,6 +5,7 @@ export enum UserAction {
 
 export enum ProjectAction {
   INIT_STATE = 'INIT_STATE',
+  ADD_PROJECT = 'ADD_PROJECT',
   SELECT_PROJECT = 'SELECT_PROJECT',
   SET_AVAILABLE_PROJECTS = 'SET_AVAILABLE_PROJECTS',
 }

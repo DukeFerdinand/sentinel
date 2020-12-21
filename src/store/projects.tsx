@@ -35,6 +35,12 @@ export const ProjectStateProvider: React.FC<StateProviderProps> = ({
         }
         case ProjectAction.SELECT_PROJECT:
           return { ...state, project: (action as Action<Project>).payload };
+        case ProjectAction.ADD_PROJECT:
+          return {
+            ...state,
+            projects: [(action as Action<Project>).payload, ...state.projects],
+            project: (action as Action<Project>).payload,
+          };
         case ProjectAction.SET_AVAILABLE_PROJECTS:
           return {
             ...state,
@@ -51,7 +57,7 @@ export const ProjectStateProvider: React.FC<StateProviderProps> = ({
   );
 
   return (
-    <Provider value={{ ...state, ...stateProps, dispatch }}>
+    <Provider value={{ ...stateProps, ...state, dispatch }}>
       {children}
     </Provider>
   );

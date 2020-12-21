@@ -1,3 +1,4 @@
+import { useRouter } from 'next/dist/client/router';
 import { useContext, useState } from 'react';
 import { Project } from '../../@generated/graphql';
 import { ProjectAction } from '../../store/actions';
@@ -5,6 +6,7 @@ import { ProjectAction } from '../../store/actions';
 import { ProjectStore } from '../../store/projects';
 
 export const ProjectManagementBar: React.FC = () => {
+  const router = useRouter();
   const { projects, project, dispatch } = useContext(ProjectStore);
   const [state, setState] = useState({
     projectsDropdown: false,
@@ -17,37 +19,49 @@ export const ProjectManagementBar: React.FC = () => {
       type: ProjectAction.SELECT_PROJECT,
       payload: project,
     });
+
+    router.push(`/projects/issues/${project.name}`);
   };
 
   return (
+    // 1/3 column
     <div className="h-14 grid grid-cols-3 border shadow-sm divide-x">
+      {/* Dropdown container */}
       <div
         role="button"
         tabIndex={0}
-        onKeyDown={() =>
+        onKeyDown={(e) =>
+          e.key === ' ' &&
           setState({ ...state, projectsDropdown: !state.projectsDropdown })
         }
         onClick={() =>
           setState({ ...state, projectsDropdown: !state.projectsDropdown })
         }
-        className="flex items-center justify-between relative px-4 hover:bg-gray-100 cursor-pointer"
+        className="flex items-center justify-between relative"
       >
-        {project?.name} <i className="material-icons">keyboard_arrow_down</i>
+        {/* Dropdown activator */}
+        <div className="hover:bg-gray-100 cursor-pointer flex flex-row w-full h-full items-center justify-between px-4">
+          {project?.name} <i className="material-icons">keyboard_arrow_down</i>
+        </div>
+
+        {/* Dropdown content */}
         {state.projectsDropdown && (
-          <div className="absolute hover:bg-gray-100 shadow-sm border w-full right-0 left-0 bg-white top-full">
+          <div className="absolute shadow-sm border w-full right-0 left-0 bg-white top-full">
             {projects.map((p, i) => {
               return (
                 <div
                   role="button"
                   tabIndex={0}
-                  onKeyDown={() => selectProject(p)}
+                  onKeyDown={(e) => e.key === ' ' && selectProject(p)}
                   onClick={() => selectProject(p)}
                   key={`project-dropdown-item=${i}`}
                   className="flex flex-row items-center h-14 px-4 hover:bg-gray-100"
                 >
                   {p.name}
 
-                  <span className="ml-auto text-gray-400">Selected</span>
+                  <span className="ml-auto text-gray-400">
+                    {p.id === project?.id && 'Selected'}
+                  </span>
                 </div>
               );
             })}
