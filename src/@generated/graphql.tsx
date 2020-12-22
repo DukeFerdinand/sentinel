@@ -21,6 +21,8 @@ export type Query = {
   sayHello?: Maybe<Scalars['String']>;
   project?: Maybe<Project>;
   projects: Array<Maybe<Project>>;
+  allCounts: Array<Count>;
+  projectCount: Count;
 };
 
 
@@ -110,6 +112,12 @@ export type ProjectInput = {
   createdBy: Scalars['ID'];
   name: Scalars['String'];
   language: Scalars['String'];
+};
+
+export type Count = {
+  __typename?: 'Count';
+  type: Scalars['String'];
+  total: Scalars['Int'];
 };
 
 export enum CacheControlScope {
@@ -208,6 +216,7 @@ export type ResolversTypes = {
   Project: ResolverTypeWrapper<Project>;
   Paging: ResolverTypeWrapper<Paging>;
   ProjectInput: ProjectInput;
+  Count: ResolverTypeWrapper<Count>;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
 };
@@ -226,6 +235,7 @@ export type ResolversParentTypes = {
   Project: Project;
   Paging: Paging;
   ProjectInput: ProjectInput;
+  Count: Count;
   Upload: Scalars['Upload'];
 };
 
@@ -233,6 +243,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   sayHello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'name'>>;
   projects?: Resolver<Array<Maybe<ResolversTypes['Project']>>, ParentType, ContextType, RequireFields<QueryProjectsArgs, never>>;
+  allCounts?: Resolver<Array<ResolversTypes['Count']>, ParentType, ContextType>;
+  projectCount?: Resolver<ResolversTypes['Count'], ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -267,6 +279,12 @@ export type PagingResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Count'] = ResolversParentTypes['Count']> = {
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
   name: 'Upload';
 }
@@ -277,6 +295,7 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Paging?: PagingResolvers<ContextType>;
+  Count?: CountResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };
 

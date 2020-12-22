@@ -1,0 +1,9 @@
+type Count {
+  type: String!
+  total: Int!
+}
+
+type Query {
+  allCounts: [Count!]!
+  projectCount: Count!
+}

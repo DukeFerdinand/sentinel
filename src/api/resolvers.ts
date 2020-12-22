@@ -4,6 +4,7 @@ import { userResolvers } from './users/userResolvers';
 import { userMutations } from './users/userMutations';
 import { projectResolvers } from './projects/projectResolvers';
 import { projectMutations } from './projects/projectMutations';
+import { countResolvers } from './counts/countResolvers';
 import { ResolverObj } from '../@types/structures';
 
 const testResolvers: ResolverObj<'Query'> = {
@@ -22,5 +23,6 @@ export default mergeResolvers([
   projectResolvers,
   projectMutations,
   // Misc Resolvers
+  countResolvers,
   testResolvers,
 ]);
