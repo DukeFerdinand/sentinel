@@ -8,9 +8,8 @@ export const userPath = (id: string): string => `users/${id}`;
 // users/<id>/projects
 export const projectsPath = (id: string): string => `${userPath(id)}/projects`;
 
-// users/<id>/projectsCount
-export const projectsCountPath = (id: string): string =>
-  `${userPath(id)}/projectsCount`;
+// users/<id>/counts
+export const countsPath = (id: string): string => `${userPath(id)}/counts`;
 
 // users/<id>/projects/<project>
 export const projectPath = (id: string, projectName: string): string =>

@@ -1,3 +1,4 @@
+import { FieldValue } from '@google-cloud/firestore';
 import { ApolloError } from 'apollo-server-micro';
 import { v4 as uuidGen } from 'uuid';
 
@@ -9,7 +10,7 @@ import {
 import { ResolverContext } from '../../@types/resolvers';
 import { ResolverObj } from '../../@types/structures';
 import { dbConnection } from '../../lib/firestore';
-import { formatProjectName, projectsPath } from '../utils';
+import { countsPath, formatProjectName, projectsPath } from '../utils';
 
 export const projectMutations: ResolverObj<'Mutation'> = {
   Mutation: {
@@ -32,10 +33,17 @@ export const projectMutations: ResolverObj<'Mutation'> = {
           const projectsCollection = dbConnection().collection(
             projectsPath(user.id)
           );
+          const counts = dbConnection().collection(countsPath(user.id));
+
+          const incProjects = FieldValue.increment(1);
 
           await projectsCollection
             .doc(formatProjectName(project.name))
             .create(project);
+
+          await counts.doc('projects').update({
+            total: incProjects,
+          });
 
           return project;
         } catch (e) {
@@ -66,8 +74,14 @@ export const projectMutations: ResolverObj<'Mutation'> = {
           const projectsCollection = dbConnection().collection(
             projectsPath(user.id)
           );
+          const counts = dbConnection().collection(countsPath(user.id));
+          const incProjects = FieldValue.increment(-1);
 
           await projectsCollection.doc(formatProjectName(name)).delete();
+
+          await counts.doc('projects').update({
+            total: incProjects,
+          });
 
           return true;
         } catch (e) {
