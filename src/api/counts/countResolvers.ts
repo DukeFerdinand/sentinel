@@ -18,7 +18,7 @@ export const countResolvers: ResolverObj<'Query'> = {
           .doc('projects')
           .get();
 
-        return { total: counts.data()?.total, type: 'project' } as Count;
+        return { total: counts.data()?.total || 0, type: 'project' } as Count;
       }
       return new ApolloError('Authorized user required', '403');
     },
