@@ -5,6 +5,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import { Fragment, useContext, useState } from 'react';
 import { Project, ProjectInput } from '../../@generated/graphql';
+import { formatProjectName } from '../../api/utils';
 import { ProjectLayout } from '../../components/Projects/ProjectLayout';
 import { withApollo } from '../../lib/apollo';
 import { authClient } from '../../lib/apolloClient';
@@ -70,9 +71,13 @@ const NewProjectForm: NextPage = () => {
               if (data.data) {
                 dispatch({
                   type: ProjectAction.ADD_PROJECT,
-                  payload: data.data,
+                  payload: data.data.newProject,
                 });
-                router.push(`/projects/issues/${data.data?.newProject.name}`);
+                router.push(
+                  `/projects/issues/${formatProjectName(
+                    data.data.newProject.name
+                  )}`
+                );
               }
             } catch (e) {
               console.error(e);

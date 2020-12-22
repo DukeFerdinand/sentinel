@@ -16,6 +16,7 @@ type Action<T = unknown> = {
 };
 
 const initialState = {} as ProjectState;
+initialState.projects = [];
 
 export const ProjectStore = createContext<ProjectState>(initialState);
 
@@ -23,10 +24,7 @@ const { Provider } = ProjectStore;
 
 export type StateProviderProps = Omit<ProjectState, 'dispatch'>;
 
-export const ProjectStateProvider: React.FC<StateProviderProps> = ({
-  children,
-  ...stateProps
-}) => {
+export const ProjectStateProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<Reducer<ProjectState, Action>>(
     (state, action) => {
       switch (action.type) {
@@ -47,18 +45,12 @@ export const ProjectStateProvider: React.FC<StateProviderProps> = ({
             projects: (action as Action<Array<Project>>).payload,
           };
         default:
+          console.info('[DEFAULT CASE TRIGGERED]');
           return state;
       }
     },
-    // Merge state props and initial state.
-    // NOTE: If initial state has real data at some point in the future,
-    // put the more important one SECOND
-    { ...initialState, ...stateProps }
+    initialState
   );
 
-  return (
-    <Provider value={{ ...stateProps, ...state, dispatch }}>
-      {children}
-    </Provider>
-  );
+  return <Provider value={{ ...state, dispatch }}>{children}</Provider>;
 };
