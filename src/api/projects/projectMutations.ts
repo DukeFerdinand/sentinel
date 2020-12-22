@@ -30,7 +30,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
           // Technically NoSQL like this means that a user might not have a 'projects' collection yet
           // but Firestore is like Mongo in that it creates one on demand
           const projectsCollection = dbConnection().collection(
-            projectsPath(user.email)
+            projectsPath(user.id)
           );
 
           await projectsCollection
@@ -64,7 +64,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
 
         try {
           const projectsCollection = dbConnection().collection(
-            projectsPath(user.email)
+            projectsPath(user.id)
           );
 
           await projectsCollection.doc(formatProjectName(name)).delete();

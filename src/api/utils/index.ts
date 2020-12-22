@@ -3,16 +3,15 @@ export const formatProjectName = (projectName: string): string => {
 };
 
 // users/<email>
-export const userPath = (email: string): string => `users/${email}`;
+export const userPath = (id: string): string => `users/${id}`;
 
-// users/<email>/projects
-export const projectsPath = (email: string): string =>
-  `${userPath(email)}/projects`;
+// users/<id>/projects
+export const projectsPath = (id: string): string => `${userPath(id)}/projects`;
 
-// users/<email>/projectsCount
-export const projectsCountPath = (email: string): string =>
-  `${userPath(email)}/projectsCount`;
+// users/<id>/projectsCount
+export const projectsCountPath = (id: string): string =>
+  `${userPath(id)}/projectsCount`;
 
-// users/<email>/projects/<project>
-export const projectPath = (email: string, projectName: string): string =>
-  `${projectsPath(email)}/${projectName}`;
+// users/<id>/projects/<project>
+export const projectPath = (id: string, projectName: string): string =>
+  `${projectsPath(id)}/${projectName}`;

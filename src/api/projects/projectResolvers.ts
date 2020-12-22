@@ -21,7 +21,7 @@ export const projectResolvers: ResolverObj<'Query'> = {
 
         try {
           const projectsCollection = dbConnection().collection(
-            projectsPath(user.email)
+            projectsPath(user.id)
           );
 
           const project = await projectsCollection
@@ -52,7 +52,7 @@ export const projectResolvers: ResolverObj<'Query'> = {
 
         try {
           const projectsCollection = dbConnection().collection(
-            projectsPath(user.email)
+            projectsPath(user.id)
           );
 
           const projects = await projectsCollection.get();
