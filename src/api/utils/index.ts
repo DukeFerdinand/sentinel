@@ -9,6 +9,10 @@ export const userPath = (email: string): string => `users/${email}`;
 export const projectsPath = (email: string): string =>
   `${userPath(email)}/projects`;
 
+// users/<email>/projectsCount
+export const projectsCountPath = (email: string): string =>
+  `${userPath(email)}/projectsCount`;
+
 // users/<email>/projects/<project>
 export const projectPath = (email: string, projectName: string): string =>
   `${projectsPath(email)}/${projectName}`;

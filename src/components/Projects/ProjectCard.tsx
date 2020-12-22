@@ -1,6 +1,8 @@
 import Link from 'next/link';
+
 import { Project } from '../../@generated/graphql';
 import { formatProjectName } from '../../api/utils';
+import { GeneratedSVG } from '../Common/GeneratedSVG';
 
 export interface ProjectCardProps {
   project?: Project;
@@ -16,10 +18,16 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     <div className="rounded-md border shadow-md xs:w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/4 pb-4 m-2">
       <div className="flex flex-row items-center mb-4 pt-5 px-5">
         {/* TEMPORARY IMAGE */}
-        <img
+        {/* <img
           alt={project.name}
           className="mr-2 h-8"
-          src={`https://www.tinygraphs.com/labs/isogrids/hexa16/${project.name}?theme=frogideas&numcolors=4&size=50&fmt=svg`}
+          // src={`https://www.tinygraphs.com/labs/isogrids/hexa16/${project.name}?theme=frogideas&numcolors=4&size=50&fmt=svg`}
+          // src={}
+        /> */}
+        <GeneratedSVG
+          className="mr-2 h-8 items-center justify-center"
+          str={project.name}
+          size={30}
         />
         <h3 className="text-2xl">{project.name}</h3>
 

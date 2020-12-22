@@ -1,6 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import { useContext, useState } from 'react';
 import { Project } from '../../@generated/graphql';
+import { formatProjectName } from '../../api/utils';
 import { ProjectAction } from '../../store/actions';
 
 import { ProjectStore } from '../../store/projects';
@@ -20,7 +21,7 @@ export const ProjectManagementBar: React.FC = () => {
       payload: project,
     });
 
-    router.push(`/projects/issues/${project.name}`);
+    router.push(`/projects/issues/${formatProjectName(project.name)}`);
   };
 
   return (

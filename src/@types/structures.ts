@@ -9,3 +9,8 @@ export enum TokenStatus {
   Invalid,
   Expired,
 }
+
+export interface GenericCollectionCount {
+  total: number;
+  collection: string;
+}
