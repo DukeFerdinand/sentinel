@@ -40,8 +40,15 @@ export const userMutations: ResolverObj<'Mutation'> = {
       const usersRef = dbConnection().collection('users');
 
       try {
-        // Call `.create(doc)` instead of `.set` if you want to guarantee a unique email.
-        await usersRef.doc(completeUser.email).create(completeUser);
+        // Check if user exists before creating
+        const existing = await usersRef
+          .where('email', '==', completeUser.email)
+          .get();
+        if (!existing.empty) {
+          throw new Error('Email ALREADY_EXISTS');
+        }
+
+        await usersRef.doc(completeUser.id).create(completeUser);
 
         // await storage.bucket('sentinel-api-dev-bucket').upload('filename', {
         //   gzip: true,
@@ -74,16 +81,20 @@ export const userMutations: ResolverObj<'Mutation'> = {
       if (user.email) {
         try {
           // Attempt to get user doc (stored by email for unique factor)
-          const res = await usersRef.doc(user.email.toLowerCase()).get();
-          const data = res.data();
+          const res = await usersRef
+            .where('email', '==', user.email.toLowerCase())
+            .get();
+          if (!res.empty) {
+            const data = res.docs[0].data();
 
-          // Data is undefined if there's no match, compare in same check for less "if/else" overhead
-          if (data && (await comparePassword(user, data as User))) {
-            const user: User = {
-              ...(data as User),
-              token: sign(data),
-            };
-            return user;
+            // Data is undefined if there's no match, compare in same check for less "if/else" overhead
+            if (data && (await comparePassword(user, data as User))) {
+              const user: User = {
+                ...(data as User),
+                token: sign(data),
+              };
+              return user;
+            }
           }
 
           // We don't need a distinction between failed email and failed password for login

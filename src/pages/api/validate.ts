@@ -29,7 +29,7 @@ export default async function (
       const usersRef = dbConnection().collection('users');
 
       // At this point the user data is WORKING, so assume it's good and try to find the data
-      const userData = await usersRef.doc(validUser.email.toLowerCase()).get();
+      const userData = await usersRef.doc(validUser.id).get();
 
       // Partial so we can delete the password
       const data = userData.data() as Partial<User>;
