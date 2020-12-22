@@ -5,11 +5,15 @@ describe('incCount', () => {
     const val = await incCount({
       value: {
         fields: {
-          name: 'sentinel-api',
-          id: 'uuid',
+          name: {
+            stringValue: 'sentinel-api',
+          },
+          id: {
+            stringValue: 'uuid',
+          },
           // Should not be a real uuid. ALWAYS use 'test-account' for testing
-          createdBy: 'test-account',
-          language: 'Node.js',
+          createdBy: { stringValue: 'test-account' },
+          language: { strginValue: 'Node.js' },
         },
       },
     });

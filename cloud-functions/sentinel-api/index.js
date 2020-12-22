@@ -36,7 +36,7 @@ exports.incCount = async (event) => {
     const data = event.value.fields;
 
     const countCollection = firestore.collection(
-      projectsCountPath(data.createdBy)
+      projectsCountPath(data.createdBy.stringValue)
     );
 
     // Get existing doc if available
