@@ -113,10 +113,9 @@ const Layout: React.FC = ({ children }) => {
         <Fragment>
           {/* Then any top level components */}
           <Navbar user={user} />
-          {user && <AppBar />}
 
           {/* THEN the main flow */}
-          <div className="flex-grow">{children}</div>
+          <div className="flex-grow pt-12">{children}</div>
         </Fragment>
       )}
     </main>

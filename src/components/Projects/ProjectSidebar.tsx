@@ -34,10 +34,7 @@ const links: LinkConfig[] = [
 export const ProjectSidebar: React.FC = () => {
   const router = useRouter();
   return (
-    <aside
-      id="sidebar"
-      className="bg-light-blue-600 w-60 h-full flex-shrink-0 p-4"
-    >
+    <aside id="sidebar" className="bg-blue-500 w-60 h-full flex-shrink-0 p-4">
       <div id="links" className="w-full flex flex-col">
         {links.map((link) => {
           let isCurrentRoute = false;

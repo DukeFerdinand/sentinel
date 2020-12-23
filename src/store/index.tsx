@@ -31,6 +31,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({
         case UserAction.SET_USER:
           // TODO: find out how to do this without type coercion
           return { ...state, user: (action as Action<User>).payload };
+        case UserAction.LOGOUT:
+          return { ...state, user: undefined };
         default:
           return state;
       }
