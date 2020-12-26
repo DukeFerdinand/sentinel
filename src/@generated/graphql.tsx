@@ -82,7 +82,7 @@ export type Mutation = {
   validate?: Maybe<User>;
   newProject?: Maybe<Project>;
   deleteProject: Scalars['Boolean'];
-  addApiKey: ApiKey;
+  addApiKey: ApiKeyResponse;
   revokeKey: ApiKey;
 };
 
@@ -173,14 +173,20 @@ export type ApiKey = {
   name: Scalars['String'];
   project: Scalars['String'];
   environment: Scalars['String'];
-  key: Scalars['String'];
 };
 
 export type ApiKeyInput = {
   id?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   project: Scalars['String'];
+  projectName: Scalars['String'];
   environment: Scalars['String'];
+};
+
+export type ApiKeyResponse = {
+  __typename?: 'ApiKeyResponse';
+  storedInfo: ApiKey;
+  key: Scalars['String'];
 };
 
 export enum CacheControlScope {
@@ -284,6 +290,7 @@ export type ResolversTypes = {
   Issue: ResolverTypeWrapper<Issue>;
   ApiKey: ResolverTypeWrapper<ApiKey>;
   ApiKeyInput: ApiKeyInput;
+  ApiKeyResponse: ResolverTypeWrapper<ApiKeyResponse>;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
 };
@@ -306,6 +313,7 @@ export type ResolversParentTypes = {
   Issue: Issue;
   ApiKey: ApiKey;
   ApiKeyInput: ApiKeyInput;
+  ApiKeyResponse: ApiKeyResponse;
   Upload: Scalars['Upload'];
 };
 
@@ -335,7 +343,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   validate?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationValidateArgs, 'token'>>;
   newProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationNewProjectArgs, 'projectInfo'>>;
   deleteProject?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'name'>>;
-  addApiKey?: Resolver<ResolversTypes['ApiKey'], ParentType, ContextType, RequireFields<MutationAddApiKeyArgs, never>>;
+  addApiKey?: Resolver<ResolversTypes['ApiKeyResponse'], ParentType, ContextType, RequireFields<MutationAddApiKeyArgs, never>>;
   revokeKey?: Resolver<ResolversTypes['ApiKey'], ParentType, ContextType, RequireFields<MutationRevokeKeyArgs, 'id'>>;
 };
 
@@ -376,6 +384,11 @@ export type ApiKeyResolvers<ContextType = any, ParentType extends ResolversParen
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   project?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   environment?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApiKeyResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApiKeyResponse'] = ResolversParentTypes['ApiKeyResponse']> = {
+  storedInfo?: Resolver<ResolversTypes['ApiKey'], ParentType, ContextType>;
   key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -393,6 +406,7 @@ export type Resolvers<ContextType = any> = {
   Count?: CountResolvers<ContextType>;
   Issue?: IssueResolvers<ContextType>;
   ApiKey?: ApiKeyResolvers<ContextType>;
+  ApiKeyResponse?: ApiKeyResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };
 

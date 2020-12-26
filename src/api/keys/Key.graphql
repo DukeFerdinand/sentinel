@@ -3,16 +3,21 @@ type ApiKey {
   name: String!
   project: String!
   environment: String!
-  # This will only ever be sent to the client ONCE.
-  # After, it's only used for comparison
-  key: String!
 }
 
 input ApiKeyInput {
   id: ID
   name: String!
   project: String!
+  projectName: String!
   environment: String!
+}
+
+type ApiKeyResponse {
+  storedInfo: ApiKey!
+  # This will only ever be sent to the client ONCE as a result of creation
+  # After, this value is only used for comparison
+  key: String!
 }
 
 type Query {
@@ -20,6 +25,6 @@ type Query {
 }
 
 type Mutation {
-  addApiKey(config: ApiKeyInput): ApiKey!
+  addApiKey(config: ApiKeyInput): ApiKeyResponse!
   revokeKey(id: ID!): ApiKey!
 }
