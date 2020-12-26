@@ -29,6 +29,12 @@ const links: LinkConfig[] = [
     text: 'Issues',
     exact: false,
   },
+  {
+    href: '/projects/keys',
+    icon: 'vpn_key',
+    text: 'Keys',
+    exact: false,
+  },
 ];
 
 export const ProjectSidebar: React.FC = () => {

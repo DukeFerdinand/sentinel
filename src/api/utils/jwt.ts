@@ -3,7 +3,7 @@ import { DefaultObject } from '../../@types/structures';
 
 interface JWT_ENV {
   key: string;
-  expires: string | number;
+  expires?: string | number;
   algorithm: 'HS256';
 }
 
@@ -19,12 +19,13 @@ const getEnv = (): JWT_ENV => {
 };
 
 export const sign = <T extends string | DefaultObject | Buffer>(
-  payload: T
+  payload: T,
+  expiration: string | undefined = '7 days'
 ): string => {
   const { expires, key, algorithm } = getEnv();
   return jwt.sign(payload, key, {
     algorithm,
-    expiresIn: '7 days',
+    expiresIn: expiration,
   });
 };
 

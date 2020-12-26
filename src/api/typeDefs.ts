@@ -3,6 +3,8 @@ import { mergeTypeDefs } from 'graphql-tools';
 import User from './users/User.graphql';
 import Project from './projects/Project.graphql';
 import Counts from './counts/Counts.graphql';
+import Issue from './issues/Issue.graphql';
+import Key from './keys/Key.graphql';
 
 const inFileTypeDefs = gql`
   type Query {
@@ -17,4 +19,6 @@ export default mergeTypeDefs([
   User,
   Project,
   Counts,
+  Issue,
+  Key,
 ]);

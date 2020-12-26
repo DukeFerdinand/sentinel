@@ -5,6 +5,9 @@ import { userMutations } from './users/userMutations';
 import { projectResolvers } from './projects/projectResolvers';
 import { projectMutations } from './projects/projectMutations';
 import { countResolvers } from './counts/countResolvers';
+import { issueResolvers } from './issues/issueResolvers';
+import { keyResolvers } from './keys/keyResolvers';
+import { keyMutation } from './keys/keyMutations';
 import { ResolverObj } from '../@types/structures';
 
 const testResolvers: ResolverObj<'Query'> = {
@@ -22,6 +25,11 @@ export default mergeResolvers([
   // Project
   projectResolvers,
   projectMutations,
+  // Issues
+  issueResolvers,
+  // Api Keys
+  keyResolvers,
+  keyMutation,
   // Misc Resolvers
   countResolvers,
   testResolvers,

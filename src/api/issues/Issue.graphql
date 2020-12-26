@@ -1,0 +1,22 @@
+enum IssueType {
+  Error
+  Info
+  Warning
+}
+
+type Issue {
+  id: ID!
+  title: String!
+  issueType: IssueType!
+  open: Boolean!
+  stack: String!
+  # Stringified JSON of extra fields
+  extra: String
+  # Caught by issue wrapper or not. Defaults to yes
+  handled: Boolean!
+}
+
+type Query {
+  issue(issueId: String!): Issue!
+  issues(projectId: String!): [Issue!]!
+}

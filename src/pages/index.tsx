@@ -1,6 +1,5 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import Head from 'next/head';
 import { css } from '@emotion/react';
 import { Carousel } from '../components/Common/Carousel';

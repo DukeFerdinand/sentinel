@@ -1,0 +1,25 @@
+type ApiKey {
+  id: ID!
+  name: String!
+  project: String!
+  environment: String!
+  # This will only ever be sent to the client ONCE.
+  # After, it's only used for comparison
+  key: String!
+}
+
+input ApiKeyInput {
+  id: ID
+  name: String!
+  project: String!
+  environment: String!
+}
+
+type Query {
+  activeKeys(project: ID!): [ApiKey!]!
+}
+
+type Mutation {
+  addApiKey(config: ApiKeyInput): ApiKey!
+  revokeKey(id: ID!): ApiKey!
+}
