@@ -1,6 +1,5 @@
 import { FieldValue } from '@google-cloud/firestore';
 import { ApolloError } from 'apollo-server-micro';
-import { v4 as uuidGen } from 'uuid';
 
 import {
   MutationDeleteProjectArgs,
