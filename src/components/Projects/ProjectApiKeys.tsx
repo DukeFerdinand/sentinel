@@ -27,7 +27,10 @@ export const ProjectApiKeys: React.FC<ProjectApiKeysProps> = ({
               key={`active-project-key-${i}`}
               className="w-full flex flex-row items-center mb-4 p-4 border rounded-md"
             >
-              {key.name}
+              {key.name}{' '}
+              <span className="mx-4 text-opacity-70 text-gray-400">
+                {key.environment}
+              </span>
               <button className="ml-auto rounded-md px-2 py-1 text-white bg-red-600 hover:bg-red-500">
                 Revoke Token
               </button>

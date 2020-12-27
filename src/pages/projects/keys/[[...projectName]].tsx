@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import Link from 'next/link';
 import gql from 'graphql-tag';
 
@@ -9,11 +9,7 @@ import { formatProjectName } from '../../../api/utils';
 import { ProjectLayout } from '../../../components/Projects/ProjectLayout';
 import { withApollo } from '../../../lib/apollo';
 import { ProjectStore } from '../../../store/projects';
-import {
-  ApiKey,
-  ApiKeyResponse,
-  MutationAddApiKeyArgs,
-} from '../../../@generated/graphql';
+import { ApiKey, MutationAddApiKeyArgs } from '../../../@generated/graphql';
 import { authClient } from '../../../lib/apolloClient';
 import { ModalPortal } from '../../../components/Common/Modal';
 import { ProjectApiKeys } from '../../../components/Projects/ProjectApiKeys';
@@ -24,14 +20,10 @@ import { NewApiKeyForm } from '../../../components/Forms/NewApiKeyForm';
 const ADD_KEY_MUTATION = gql`
   mutation AddKey($config: ApiKeyInput) {
     addApiKey(config: $config) {
-      key
-      # Also available
-      # storedInfo {
-      #   id
-      #   name
-      #   project
-      #   environment
-      # }
+      id
+      name
+      token
+      environment
     }
   }
 `;
@@ -39,12 +31,12 @@ const ADD_KEY_MUTATION = gql`
 // QUERIES
 
 const API_KEYS_QUERY = gql`
-  query ActiveKeys($project: ID!) {
-    activeKeys(project: $project) {
+  query ActiveKeys($projectId: ID!) {
+    activeKeys(projectId: $projectId) {
       id
       name
       environment
-      project
+      # token
     }
   }
 `;
@@ -60,26 +52,25 @@ const KeyManagementContent: NextPage = () => {
     activeKeys: ApiKey[];
   }>(API_KEYS_QUERY, {
     client: authClient,
+    // Skipping both prevents a 400, and enables refetching when the project var is ready
+    skip: !project,
     variables: {
-      project: project?.id,
+      projectId: project?.id,
     },
   });
 
   // Mutations
-  const [addKey] = useMutation<{ addApiKey: ApiKeyResponse }>(
-    ADD_KEY_MUTATION,
-    {
-      client: authClient,
-      refetchQueries: [
-        {
-          query: API_KEYS_QUERY,
-          variables: {
-            project: project?.id,
-          },
+  const [addKey] = useMutation<{ addApiKey: ApiKey }>(ADD_KEY_MUTATION, {
+    client: authClient,
+    refetchQueries: [
+      {
+        query: API_KEYS_QUERY,
+        variables: {
+          projectId: project?.id,
         },
-      ],
-    }
-  );
+      },
+    ],
+  });
 
   useEffect(() => {
     // TODO: Add setter for undefined project but a DEFINED query
@@ -114,7 +105,7 @@ const KeyManagementContent: NextPage = () => {
               const data = result.data?.addApiKey;
 
               if (data) {
-                setToken(data.key);
+                setToken(data.token);
                 setTokenModal(true);
               }
 

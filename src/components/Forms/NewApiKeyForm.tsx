@@ -13,12 +13,13 @@ interface ApiKeyFormProps {
 export const NewApiKeyForm: React.FC<ApiKeyFormProps> = ({ submit }) => {
   const [formSubmitting, setSubmitting] = useState(false);
 
+  const initialValues = {
+    keyName: '',
+    environment: '',
+  };
   return (
     <Formik
-      initialValues={{
-        keyName: '',
-        environment: '',
-      }}
+      initialValues={initialValues}
       onSubmit={async (values, helpers) => {
         setSubmitting(true);
         if (!values.keyName) {
@@ -36,6 +37,8 @@ export const NewApiKeyForm: React.FC<ApiKeyFormProps> = ({ submit }) => {
         }
 
         setSubmitting(false);
+        // Clear the form
+        helpers.setValues(initialValues);
       }}
     >
       <Form className="border mb-4 p-4 w-full lg:w-1/2 flex flex-col rounded-md">
