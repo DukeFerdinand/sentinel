@@ -26,10 +26,10 @@ export default async function (
   } else {
     try {
       const validUser = validate<User>(cookies.api_token || '');
-      const usersRef = dbConnection().collection('users');
+      const userRef = dbConnection().collection('users').doc(validUser.id);
 
       // At this point the user data is WORKING, so assume it's good and try to find the data
-      const userData = await usersRef.doc(validUser.id).get();
+      const userData = await userRef.get();
 
       // Partial so we can delete the password
       const data = userData.data() as Partial<User>;
@@ -37,7 +37,7 @@ export default async function (
       // This isn't a Graphql route, so we need to manually delete the password
       delete data.password;
 
-      res.status(200).json(data as User);
+      res.status(200).json({ ...data, id: userRef.id } as User);
     } catch (error) {
       // Error message is 'jwt expired'
       if (error.message.includes('expired')) {

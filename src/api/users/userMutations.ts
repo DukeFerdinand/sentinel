@@ -59,7 +59,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
         const user: User = {
           ...completeUser,
           id: userDoc.id,
-          token: sign(completeUser),
+          token: sign({ ...completeUser, id: userDoc.id }),
         };
         return user;
       } catch (error) {
@@ -94,7 +94,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
               const user: User = {
                 ...(data as User),
                 id: userDoc.id,
-                token: sign(data),
+                token: sign({ ...data, id: userDoc.id }),
               };
               return user;
             }
@@ -112,6 +112,6 @@ export const userMutations: ResolverObj<'Mutation'> = {
 
       return new ApolloError('Error fetching user');
     },
-    validate: async (_, { token }: MutationValidateArgs) => {},
+    // validate: async (_, { token }: MutationValidateArgs) => {},
   },
 };

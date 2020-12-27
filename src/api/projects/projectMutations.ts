@@ -10,7 +10,7 @@ import {
 import { ResolverContext } from '../../@types/resolvers';
 import { ResolverObj } from '../../@types/structures';
 import { dbConnection } from '../../lib/firestore';
-import { countsPath, formatProjectName, projectsPath } from '../utils';
+import { countsPath, projectsPath } from '../utils';
 
 export const projectMutations: ResolverObj<'Mutation'> = {
   Mutation: {
@@ -25,6 +25,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
         };
         // This info is needed for permissions/assignment
         const user = ctx.user;
+        console.info(ctx.user);
 
         try {
           // Technically NoSQL like this means that a user might not have a 'projects' collection yet
@@ -49,7 +50,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
           const projectDoc = projectsCollection.doc();
           await projectDoc.create(project);
 
-          await counts.doc('projects').update({
+          await counts.doc('projects').set({
             total: incProjects,
           });
 
