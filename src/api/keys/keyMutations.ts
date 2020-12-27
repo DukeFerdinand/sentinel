@@ -47,11 +47,11 @@ export const keyMutation: ResolverObj<'Mutation'> = {
         };
 
         const envDoc = dbConnection()
-          .collection(environmentsPath(user.id, config.projectName))
+          .collection(environmentsPath(user.id, config.project))
           .doc(apiToken.environment);
 
         const keyCollection = dbConnection().collection(
-          keysPath(user.id, config.projectName)
+          keysPath(user.id, config.project)
         );
 
         // Create or update environment in a way that we can list it later for

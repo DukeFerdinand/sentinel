@@ -8,8 +8,7 @@ type ApiKey {
 input ApiKeyInput {
   id: ID
   name: String!
-  project: String!
-  projectName: String!
+  project: ID!
   environment: String!
 }
 

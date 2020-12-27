@@ -2,18 +2,21 @@ import { useContext, useEffect } from 'react';
 import { NextPage } from 'next';
 import { Field, Form, Formik } from 'formik';
 import { useRouter } from 'next/dist/client/router';
+import { useMutation, useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
 
 import { formatProjectName } from '../../../api/utils';
 import { ProjectLayout } from '../../../components/Projects/ProjectLayout';
 import { withApollo } from '../../../lib/apollo';
 import { ProjectStore } from '../../../store/projects';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/client';
 import {
+  ApiKey,
   ApiKeyResponse,
   MutationAddApiKeyArgs,
 } from '../../../@generated/graphql';
 import { authClient } from '../../../lib/apolloClient';
+
+// MUTATIONS
 
 const ADD_KEY_MUTATION = gql`
   mutation AddKey($config: ApiKeyInput) {
@@ -29,9 +32,35 @@ const ADD_KEY_MUTATION = gql`
   }
 `;
 
+// QUERIES
+
+const API_KEYS_QUERY = gql`
+  query ActiveKeys($project: ID!) {
+    activeKeys(project: $project) {
+      id
+      name
+      environment
+      project
+    }
+  }
+`;
+
 const KeyManagementContent: NextPage = () => {
   const router = useRouter();
   const { projects, project } = useContext(ProjectStore);
+
+  const {
+    data: keysData,
+    loading: keysQueryLoading,
+    error,
+    refetch,
+  } = useQuery<{ activeKeys: ApiKey[] }>(API_KEYS_QUERY, {
+    client: authClient,
+    variables: {
+      project: project?.id,
+    },
+  });
+
   const [addKey] = useMutation<ApiKeyResponse>(ADD_KEY_MUTATION, {
     client: authClient,
   });
@@ -74,7 +103,6 @@ const KeyManagementContent: NextPage = () => {
                   name: values.keyName,
                   environment: values.environment,
                   project: project.id,
-                  projectName: (router.query.projectName as string[])[0],
                 };
                 const result = await addKey({
                   variables: {
@@ -122,22 +150,30 @@ const KeyManagementContent: NextPage = () => {
           {/* Render Keys */}
           <div className="flex flex-col pt-4">
             <h2 className="text-2xl mb-4">Active Keys</h2>
-            <div className="p-4 mb-4 border bg-gray-200">
-              <p>No active keys, create one above</p>
-            </div>
-            {/* {[0, 1, 2].map((k, i) => {
-              return (
-                <div
-                  key={`active-project-key-${i}`}
-                  className="w-full flex flex-row items-center mb-4 p-4 border rounded-md"
-                >
-                  Key - {k}
-                  <button className="ml-auto rounded-md px-2 py-1 text-white bg-red-600 hover:bg-red-500">
-                    Revoke Token
-                  </button>
-                </div>
-              );
-            })} */}
+            {keysQueryLoading && (
+              <div className="p-4 mb-4 border bg-gray-200">
+                <p>Loading keys</p>
+              </div>
+            )}
+            {keysData && keysData.activeKeys.length > 0 ? (
+              keysData.activeKeys.map((key, i) => {
+                return (
+                  <div
+                    key={`active-project-key-${i}`}
+                    className="w-full flex flex-row items-center mb-4 p-4 border rounded-md"
+                  >
+                    {key.name}
+                    <button className="ml-auto rounded-md px-2 py-1 text-white bg-red-600 hover:bg-red-500">
+                      Revoke Token
+                    </button>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="p-4 mb-4 border bg-gray-200">
+                <p>No active keys, create one above</p>
+              </div>
+            )}
           </div>
         </div>
       )}

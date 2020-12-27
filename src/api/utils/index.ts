@@ -26,7 +26,7 @@ export const environmentPath = (
   envName: string
 ): string => `${environmentsPath(userId, projectName)}/${envName}`;
 
-// users/<id>/projects/<project>/keys
+/** users/\<id>/projects/\<project>/keys */
 export const keysPath = (userId: string, projectName: string): string =>
   `${projectPath(userId, projectName)}/keys`;
 

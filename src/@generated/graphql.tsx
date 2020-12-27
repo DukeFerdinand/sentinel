@@ -179,8 +179,7 @@ export type ApiKey = {
 export type ApiKeyInput = {
   id?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
-  project: Scalars['String'];
-  projectName: Scalars['String'];
+  project: Scalars['ID'];
   environment: Scalars['String'];
 };
 
