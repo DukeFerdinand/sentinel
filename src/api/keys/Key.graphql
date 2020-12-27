@@ -1,29 +1,21 @@
 type ApiKey {
   id: ID!
+  token: String!
   name: String!
-  project: String!
   environment: String!
 }
 
 input ApiKeyInput {
-  id: ID
   name: String!
   project: ID!
   environment: String!
 }
 
-type ApiKeyResponse {
-  storedInfo: ApiKey!
-  # This will only ever be sent to the client ONCE as a result of creation
-  # After, this value is only used for comparison
-  key: String!
-}
-
 type Query {
-  activeKeys(project: ID!): [ApiKey!]!
+  activeKeys(projectId: ID!): [ApiKey!]!
 }
 
 type Mutation {
-  addApiKey(config: ApiKeyInput): ApiKeyResponse!
+  addApiKey(config: ApiKeyInput): ApiKey!
   revokeKey(id: ID!): ApiKey!
 }

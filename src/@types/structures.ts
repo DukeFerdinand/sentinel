@@ -14,3 +14,10 @@ export interface GenericCollectionCount {
   total: number;
   collection: string;
 }
+
+export interface KeyPayload extends Record<string, string> {
+  userId: string;
+  projectId: string;
+  environment: string;
+  keyId: string;
+}

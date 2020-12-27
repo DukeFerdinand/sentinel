@@ -3,29 +3,31 @@ import { ApiKey, QueryActiveKeysArgs } from '../../@generated/graphql';
 import { ApolloError } from 'apollo-server-micro';
 import { ResolverContext } from '../../@types/resolvers';
 import { dbConnection } from '../../lib/firestore';
-import { keyPath, keysPath } from '../utils';
+import { keysPath } from '../utils';
 
 export const keyResolvers: ResolverObj<'Query'> = {
   Query: {
     async activeKeys(
-      _,
-      { project }: QueryActiveKeysArgs,
+      _: unknown,
+      { projectId }: QueryActiveKeysArgs,
       { user }: ResolverContext
     ): Promise<Array<ApiKey> | ApolloError> {
-      if (user && project) {
-        const keysCollection = dbConnection().collection(
-          keysPath(user.id, project)
-        );
+      if (user && projectId) {
+        // Keys are tied to a project, so they're stored that way too
+        const keysCollection = dbConnection().collection(keysPath(projectId));
 
         const activeKeys = await keysCollection.get();
 
-        const mappedKeys = activeKeys.docs.map((k) => k.data());
+        const mappedKeys = activeKeys.docs.map((k) => ({
+          ...k.data(),
+          id: k.id,
+        }));
 
         return mappedKeys as Array<ApiKey>;
       }
 
-      if (!project) {
-        return new ApolloError('Project id required', '403');
+      if (!projectId) {
+        return new ApolloError('Project id required to query keys', '400');
       }
 
       if (!user) {
