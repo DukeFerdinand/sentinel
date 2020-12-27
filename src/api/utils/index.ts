@@ -2,31 +2,31 @@ export const formatProjectName = (projectName: string): string => {
   return projectName.toLowerCase().replaceAll(' ', '-');
 };
 
-// users/<email>
+/**  ## users/\<email> */
 export const userPath = (id: string): string => `users/${id}`;
 
-// projects/<id>
+/**  ## projects/\<id> */
 export const projectsPath = (): string => `projects`;
 
-// users/<id>/counts
+/**  ## users/\<id>/counts */
 export const countsPath = (id: string): string => `${userPath(id)}/counts`;
 
-// projects/<project>
+/**  ## projects/\<project> */
 export const projectPath = (projectId: string): string =>
   `${projectsPath()}/${projectId}`;
 
-// users/<id>/projects/<project>/environments
+/** ## projects/\<project>/environments  */
 export const environmentsPath = (projectId: string): string =>
   `${projectPath(projectId)}/environments`;
 
-// projects/<project>/environments/<env>
+/** ## projects/\<project>/environments/\<env> */
 export const environmentPath = (projectId: string, envName: string): string =>
   `${environmentsPath(projectId)}/${envName}`;
 
-/** projects/\<project>/keys */
+/** ## projects/\<project>/keys */
 export const keysPath = (projectId: string): string =>
   `${projectPath(projectId)}/keys`;
 
-// users/<id>/projects/<project>/keys/<id>
+/** ## projects/\<project>/keys/\<id> */
 export const keyPath = (projectId: string, keyId: string): string =>
   `${environmentsPath(projectId)}/${keyId}`;
