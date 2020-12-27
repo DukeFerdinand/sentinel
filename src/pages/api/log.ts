@@ -46,6 +46,12 @@ export default async function (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
+  if (req.method !== 'POST') {
+    return res.status(405).json({
+      message: 'Only POST method allowed',
+    });
+  }
+
   if (!req.headers.authorization) {
     return res.status(403).json({
       message: 'Authorization token missing or invalid',
@@ -66,7 +72,9 @@ export default async function (
     const envDoc = envCollection.doc(tokenInfo.environment);
     const issues = envDoc.collection('issues');
 
-    // Temp static issue. This will come from req.body soon
+    console.info(req.body);
+
+    // Temp static issue until req validation implemented
     const issue = {
       title: 'Error in main.js @ test',
       issueType: IssueType.Error,
@@ -96,9 +104,12 @@ export default async function (
     });
   } catch (e) {
     // Token could not be parsed into expected parts
-    if (e.message === 'Bad token input') {
+    if (
+      e.message === 'Bad token input' ||
+      e.message === 'Token revoked or invalid'
+    ) {
       return res.status(403).json({
-        message: 'Bad auth token',
+        message: 'Auth token invalid or revoked',
       });
     }
 
