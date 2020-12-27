@@ -89,7 +89,7 @@ export default async function (
 
     // Create document for new issue
     const issueDoc = issues.doc();
-    await issueDoc.create(issue);
+    await issueDoc.create(req.body);
 
     // Issue created, update the total count for given environment
     envDoc.set(

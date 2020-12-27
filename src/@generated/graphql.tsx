@@ -23,8 +23,9 @@ export type Query = {
   projects: Array<Maybe<Project>>;
   allCounts: Array<Count>;
   projectCount: Count;
+  environments: Array<Environment>;
   issue: Issue;
-  issues: Array<Issue>;
+  issues: IssueCollection;
   activeKeys: Array<ApiKey>;
 };
 
@@ -41,6 +42,11 @@ export type QueryProjectsArgs = {
 };
 
 
+export type QueryEnvironmentsArgs = {
+  projectId: Scalars['String'];
+};
+
+
 export type QueryIssueArgs = {
   issueId: Scalars['String'];
 };
@@ -48,6 +54,7 @@ export type QueryIssueArgs = {
 
 export type QueryIssuesArgs = {
   projectId: Scalars['String'];
+  environment: Scalars['String'];
 };
 
 
@@ -168,6 +175,18 @@ export type Issue = {
   handled: Scalars['Boolean'];
 };
 
+export type Environment = {
+  __typename?: 'Environment';
+  name: Scalars['String'];
+  total: Scalars['Int'];
+};
+
+export type IssueCollection = {
+  __typename?: 'IssueCollection';
+  issues: Array<Issue>;
+  count: Scalars['Int'];
+};
+
 export type ApiKey = {
   __typename?: 'ApiKey';
   id: Scalars['ID'];
@@ -281,6 +300,8 @@ export type ResolversTypes = {
   Count: ResolverTypeWrapper<Count>;
   IssueType: IssueType;
   Issue: ResolverTypeWrapper<Issue>;
+  Environment: ResolverTypeWrapper<Environment>;
+  IssueCollection: ResolverTypeWrapper<IssueCollection>;
   ApiKey: ResolverTypeWrapper<ApiKey>;
   ApiKeyInput: ApiKeyInput;
   CacheControlScope: CacheControlScope;
@@ -303,6 +324,8 @@ export type ResolversParentTypes = {
   ProjectInput: ProjectInput;
   Count: Count;
   Issue: Issue;
+  Environment: Environment;
+  IssueCollection: IssueCollection;
   ApiKey: ApiKey;
   ApiKeyInput: ApiKeyInput;
   Upload: Scalars['Upload'];
@@ -314,8 +337,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   projects?: Resolver<Array<Maybe<ResolversTypes['Project']>>, ParentType, ContextType, RequireFields<QueryProjectsArgs, never>>;
   allCounts?: Resolver<Array<ResolversTypes['Count']>, ParentType, ContextType>;
   projectCount?: Resolver<ResolversTypes['Count'], ParentType, ContextType>;
+  environments?: Resolver<Array<ResolversTypes['Environment']>, ParentType, ContextType, RequireFields<QueryEnvironmentsArgs, 'projectId'>>;
   issue?: Resolver<ResolversTypes['Issue'], ParentType, ContextType, RequireFields<QueryIssueArgs, 'issueId'>>;
-  issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType, RequireFields<QueryIssuesArgs, 'projectId'>>;
+  issues?: Resolver<ResolversTypes['IssueCollection'], ParentType, ContextType, RequireFields<QueryIssuesArgs, 'projectId' | 'environment'>>;
   activeKeys?: Resolver<Array<ResolversTypes['ApiKey']>, ParentType, ContextType, RequireFields<QueryActiveKeysArgs, 'projectId'>>;
 };
 
@@ -370,6 +394,18 @@ export type IssueResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EnvironmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Environment'] = ResolversParentTypes['Environment']> = {
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IssueCollectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueCollection'] = ResolversParentTypes['IssueCollection']> = {
+  issues?: Resolver<Array<ResolversTypes['Issue']>, ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ApiKeyResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApiKey'] = ResolversParentTypes['ApiKey']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -390,6 +426,8 @@ export type Resolvers<ContextType = any> = {
   Paging?: PagingResolvers<ContextType>;
   Count?: CountResolvers<ContextType>;
   Issue?: IssueResolvers<ContextType>;
+  Environment?: EnvironmentResolvers<ContextType>;
+  IssueCollection?: IssueCollectionResolvers<ContextType>;
   ApiKey?: ApiKeyResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };

@@ -10,13 +10,24 @@ type Issue {
   issueType: IssueType!
   open: Boolean!
   stack: String!
-  # Stringified JSON of extra fields
+  # Stringified JSON of extra fields - when being logged, this is REGULAR JSON. But will be stringified when stored
   extra: String
   # Caught by issue wrapper or not. Defaults to yes
   handled: Boolean!
 }
 
+type Environment {
+  name: String!
+  total: Int!
+}
+
+type IssueCollection {
+  issues: [Issue!]!
+  count: Int!
+}
+
 type Query {
+  environments(projectId: String!): [Environment!]!
   issue(issueId: String!): Issue!
-  issues(projectId: String!): [Issue!]!
+  issues(projectId: String!, environment: String!): IssueCollection!
 }
