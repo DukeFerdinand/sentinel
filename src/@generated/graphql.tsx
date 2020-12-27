@@ -30,7 +30,8 @@ export type Query = {
 
 
 export type QueryProjectArgs = {
-  name: Scalars['String'];
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 
@@ -110,7 +111,7 @@ export type MutationNewProjectArgs = {
 
 
 export type MutationDeleteProjectArgs = {
-  name: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -275,8 +276,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
   UserLogin: UserLogin;
@@ -299,8 +300,8 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Query: {};
   String: Scalars['String'];
-  Int: Scalars['Int'];
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
   User: User;
   UserInput: UserInput;
   UserLogin: UserLogin;
@@ -319,7 +320,7 @@ export type ResolversParentTypes = {
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   sayHello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, 'name'>>;
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryProjectArgs, never>>;
   projects?: Resolver<Array<Maybe<ResolversTypes['Project']>>, ParentType, ContextType, RequireFields<QueryProjectsArgs, never>>;
   allCounts?: Resolver<Array<ResolversTypes['Count']>, ParentType, ContextType>;
   projectCount?: Resolver<ResolversTypes['Count'], ParentType, ContextType>;
@@ -342,7 +343,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'user'>>;
   validate?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationValidateArgs, 'token'>>;
   newProject?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<MutationNewProjectArgs, 'projectInfo'>>;
-  deleteProject?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'name'>>;
+  deleteProject?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'id'>>;
   addApiKey?: Resolver<ResolversTypes['ApiKeyResponse'], ParentType, ContextType, RequireFields<MutationAddApiKeyArgs, never>>;
   revokeKey?: Resolver<ResolversTypes['ApiKey'], ParentType, ContextType, RequireFields<MutationRevokeKeyArgs, 'id'>>;
 };

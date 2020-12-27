@@ -37,9 +37,17 @@ export const projectMutations: ResolverObj<'Mutation'> = {
 
           const incProjects = FieldValue.increment(1);
 
-          await projectsCollection
-            .doc(formatProjectName(project.name))
-            .create(project);
+          const existingCheck = await projectsCollection
+            .select('name')
+            .where('name', '==', project.name)
+            .get();
+
+          if (!existingCheck.empty) {
+            // This will get caught by the existing catcher
+            throw new Error('ALREADY_EXISTS');
+          }
+
+          await projectsCollection.doc(project.id).create(project);
 
           await counts.doc('projects').update({
             total: incProjects,
@@ -63,7 +71,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
     },
     async deleteProject(
       _,
-      { name }: MutationDeleteProjectArgs,
+      { id }: MutationDeleteProjectArgs,
       ctx: ResolverContext
     ): Promise<boolean | ApolloError> {
       if (ctx.user) {
@@ -77,7 +85,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
           const counts = dbConnection().collection(countsPath(user.id));
           const incProjects = FieldValue.increment(-1);
 
-          await projectsCollection.doc(formatProjectName(name)).delete();
+          await projectsCollection.doc(id).delete();
 
           await counts.doc('projects').update({
             total: incProjects,

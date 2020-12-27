@@ -19,10 +19,10 @@ input ProjectInput {
 
 type Mutation {
   newProject(projectInfo: ProjectInput!): Project
-  deleteProject(name: String!): Boolean!
+  deleteProject(id: ID!): Boolean!
 }
 
 type Query {
-  project(name: String!): Project
+  project(id: ID, name: String): Project
   projects(limit: Int, offset: Int): [Project]!
 }

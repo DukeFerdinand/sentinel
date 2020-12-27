@@ -13,26 +13,37 @@ export const projectResolvers: ResolverObj<'Query'> = {
   Query: {
     async project(
       _,
-      { name }: QueryProjectArgs,
+      { id, name }: QueryProjectArgs,
       ctx: ResolverContext
     ): Promise<Project | ApolloError> {
       if (ctx.user) {
         const user = ctx.user;
+
+        if (!id && !name) {
+          return new ApolloError(
+            'Id or project name required to retrieve project',
+            '400'
+          );
+        }
 
         try {
           const projectsCollection = dbConnection().collection(
             projectsPath(user.id)
           );
 
-          const project = await projectsCollection
-            .doc(formatProjectName(name))
-            .get();
+          const project =
+            id && !name
+              ? // If  provided with an ID, just use the ID
+                await projectsCollection.doc(id).get()
+              : // Else you'll have to try and find the project with the provided name
+                (await projectsCollection.where('name', '==', name).get())
+                  .docs[0];
           const data = project.data();
           if (data) {
             return data as Project;
           }
 
-          return new ApolloError(`Project '${name}' not found`, '404');
+          return new ApolloError(`Project '${id}' not found`, '404');
         } catch (e) {
           console.error(e);
 
