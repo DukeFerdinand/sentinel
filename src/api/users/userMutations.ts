@@ -27,14 +27,13 @@ export const userMutations: ResolverObj<'Mutation'> = {
       _,
       { user }: MutationRegisterArgs
     ): Promise<User | ApolloError> {
-      const completeUser: User = {
+      const completeUser = {
         ...user,
         email: user.email.toLowerCase(),
         password: await bcrypt.hash(
           user.password,
           parseInt(process.env.DB_PASSWORD_SALT as string)
         ),
-        id: uuidGen(),
       };
 
       const usersRef = dbConnection().collection('users');
@@ -48,7 +47,8 @@ export const userMutations: ResolverObj<'Mutation'> = {
           throw new Error('Email ALREADY_EXISTS');
         }
 
-        await usersRef.doc(completeUser.id).create(completeUser);
+        const userDoc = usersRef.doc();
+        await userDoc.create(completeUser);
 
         // await storage.bucket('sentinel-api-dev-bucket').upload('filename', {
         //   gzip: true,
@@ -58,6 +58,7 @@ export const userMutations: ResolverObj<'Mutation'> = {
         // just send back with the new id
         const user: User = {
           ...completeUser,
+          id: userDoc.id,
           token: sign(completeUser),
         };
         return user;
@@ -85,12 +86,14 @@ export const userMutations: ResolverObj<'Mutation'> = {
             .where('email', '==', user.email.toLowerCase())
             .get();
           if (!res.empty) {
-            const data = res.docs[0].data();
+            const userDoc = res.docs[0];
+            const data = userDoc.data();
 
             // Data is undefined if there's no match, compare in same check for less "if/else" overhead
-            if (data && (await comparePassword(user, data as User))) {
+            if (userDoc.data() && (await comparePassword(user, data as User))) {
               const user: User = {
                 ...(data as User),
+                id: userDoc.id,
                 token: sign(data),
               };
               return user;
