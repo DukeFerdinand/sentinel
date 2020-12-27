@@ -40,7 +40,7 @@ export const projectResolvers: ResolverObj<'Query'> = {
                   .docs[0];
           const data = project.data();
           if (data) {
-            return data as Project;
+            return { ...data, id: project.id } as Project;
           }
 
           return new ApolloError(`Project '${id}' not found`, '404');
@@ -69,10 +69,10 @@ export const projectResolvers: ResolverObj<'Query'> = {
           const projects = await projectsCollection.get();
 
           const mappedProjects = projects.docs.map((d) => {
-            return d.data() as Project;
+            return { ...d.data(), id: d.id };
           });
 
-          return mappedProjects;
+          return mappedProjects as Project[];
         } catch (e) {
           console.error(e);
 

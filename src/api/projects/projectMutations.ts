@@ -20,9 +20,8 @@ export const projectMutations: ResolverObj<'Mutation'> = {
       ctx: ResolverContext
     ): Promise<Project | ApolloError> {
       if (ctx.user) {
-        const project: Project = {
+        const project = {
           ...projectInfo,
-          id: uuidGen(),
         };
         // This info is needed for permissions/assignment
         const user = ctx.user;
@@ -47,13 +46,14 @@ export const projectMutations: ResolverObj<'Mutation'> = {
             throw new Error('ALREADY_EXISTS');
           }
 
-          await projectsCollection.doc(project.id).create(project);
+          const projectDoc = projectsCollection.doc();
+          await projectDoc.create(project);
 
           await counts.doc('projects').update({
             total: incProjects,
           });
 
-          return project;
+          return { ...project, id: projectDoc.id };
         } catch (e) {
           console.error(e);
 
