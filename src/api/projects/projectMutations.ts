@@ -28,15 +28,13 @@ export const projectMutations: ResolverObj<'Mutation'> = {
         console.info(ctx.user);
 
         try {
-          // Technically NoSQL like this means that a user might not have a 'projects' collection yet
-          // but Firestore is like Mongo in that it creates one on demand
-          const projectsCollection = dbConnection().collection(
-            projectsPath(user.id)
-          );
+          const projectsCollection = dbConnection().collection(projectsPath());
+          // project count is always store as part of user data
           const counts = dbConnection().collection(countsPath(user.id));
 
           const incProjects = FieldValue.increment(1);
 
+          // Need to see if existing project with given name
           const existingCheck = await projectsCollection
             .select('name')
             .where('name', '==', project.name)
@@ -47,6 +45,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
             throw new Error('ALREADY_EXISTS');
           }
 
+          // If not, proceed with write
           const projectDoc = projectsCollection.doc();
           await projectDoc.create(project);
 
@@ -80,9 +79,7 @@ export const projectMutations: ResolverObj<'Mutation'> = {
         const user = ctx.user;
 
         try {
-          const projectsCollection = dbConnection().collection(
-            projectsPath(user.id)
-          );
+          const projectsCollection = dbConnection().collection(projectsPath());
           const counts = dbConnection().collection(countsPath(user.id));
           const incProjects = FieldValue.increment(-1);
 

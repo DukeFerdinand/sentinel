@@ -5,34 +5,28 @@ export const formatProjectName = (projectName: string): string => {
 // users/<email>
 export const userPath = (id: string): string => `users/${id}`;
 
-// users/<id>/projects
-export const projectsPath = (id: string): string => `${userPath(id)}/projects`;
+// projects/<id>
+export const projectsPath = (): string => `projects`;
 
 // users/<id>/counts
 export const countsPath = (id: string): string => `${userPath(id)}/counts`;
 
-// users/<id>/projects/<project>
-export const projectPath = (id: string, projectName: string): string =>
-  `${projectsPath(id)}/${projectName}`;
+// projects/<project>
+export const projectPath = (projectId: string): string =>
+  `${projectsPath()}/${projectId}`;
 
 // users/<id>/projects/<project>/environments
-export const environmentsPath = (userId: string, projectName: string): string =>
-  `${projectPath(userId, projectName)}/environments`;
+export const environmentsPath = (projectId: string): string =>
+  `${projectPath(projectId)}/environments`;
 
-// users/<id>/projects/<project>/environments/<env>
-export const environmentPath = (
-  userId: string,
-  projectName: string,
-  envName: string
-): string => `${environmentsPath(userId, projectName)}/${envName}`;
+// projects/<project>/environments/<env>
+export const environmentPath = (projectId: string, envName: string): string =>
+  `${environmentsPath(projectId)}/${envName}`;
 
-/** users/\<id>/projects/\<project>/keys */
-export const keysPath = (userId: string, projectName: string): string =>
-  `${projectPath(userId, projectName)}/keys`;
+/** projects/\<project>/keys */
+export const keysPath = (projectId: string): string =>
+  `${projectPath(projectId)}/keys`;
 
 // users/<id>/projects/<project>/keys/<id>
-export const keyPath = (
-  userId: string,
-  projectName: string,
-  keyId: string
-): string => `${environmentsPath(userId, projectName)}/${keyId}`;
+export const keyPath = (projectId: string, keyId: string): string =>
+  `${environmentsPath(projectId)}/${keyId}`;

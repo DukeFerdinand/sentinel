@@ -96,7 +96,6 @@ const KeyManagementContent: NextPage = () => {
         <div>{projects.map((p) => p.name)}</div>
       ) : (
         <div className="flex flex-col">
-          <button onClick={() => setTokenModal(true)}>toggle modal</button>
           <h2 className="text-2xl mb-4">Manage API keys for {project.name}</h2>
           <NewApiKeyForm
             submit={async (values) => {

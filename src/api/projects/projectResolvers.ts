@@ -27,17 +27,19 @@ export const projectResolvers: ResolverObj<'Query'> = {
         }
 
         try {
-          const projectsCollection = dbConnection().collection(
-            projectsPath(user.id)
-          );
+          const projectsCollection = dbConnection().collection(projectsPath());
 
           const project =
             id && !name
               ? // If  provided with an ID, just use the ID
                 await projectsCollection.doc(id).get()
               : // Else you'll have to try and find the project with the provided name
-                (await projectsCollection.where('name', '==', name).get())
-                  .docs[0];
+                (
+                  await projectsCollection
+                    .where('createdBy', '==', user.id)
+                    .where('name', '==', name)
+                    .get()
+                ).docs[0];
           const data = project.data();
           if (data) {
             return { ...data, id: project.id } as Project;
@@ -62,11 +64,11 @@ export const projectResolvers: ResolverObj<'Query'> = {
         const user = ctx.user;
 
         try {
-          const projectsCollection = dbConnection().collection(
-            projectsPath(user.id)
-          );
+          const projectsCollection = dbConnection().collection(projectsPath());
 
-          const projects = await projectsCollection.get();
+          const projects = await projectsCollection
+            .where('createdBy', '==', user.id)
+            .get();
 
           const mappedProjects = projects.docs.map((d) => {
             return { ...d.data(), id: d.id };
