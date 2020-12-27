@@ -24,7 +24,7 @@ const ProjectsPage: React.FC<{ user?: User }> = ({ user }) => {
         </Link>
       </div>
       <div className="flex flex-row flex-wrap pt-4">
-        {projects
+        {projects.length
           ? projects.map((project) => {
               return (
                 <ProjectCard
@@ -34,7 +34,7 @@ const ProjectsPage: React.FC<{ user?: User }> = ({ user }) => {
                 />
               );
             })
-          : [0, 1, 2, 3].map((key) => {
+          : [0, 1, 2, 3, 4, 5].map((key) => {
               return (
                 <ProjectCard
                   key={`project-card-skeleton-${key}`}

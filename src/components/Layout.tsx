@@ -4,7 +4,6 @@ import { useContext, useEffect, useState, Fragment } from 'react';
 import { RequestMethods, smartFetch } from '@dukeferdinand/ts-utils/dist/fetch';
 
 import { GlobalStyles } from '../styles/globals';
-import { AppBar } from './AppBar';
 import { Store } from '../store';
 import { Navbar } from './Navbar/Navbar';
 import { getCookies, setCookie } from '../utils/cookies';
@@ -118,6 +117,7 @@ const Layout: React.FC = ({ children }) => {
           <div className="flex-grow pt-12">{children}</div>
         </Fragment>
       )}
+      <div id="modal-root"></div>
     </main>
   );
 };

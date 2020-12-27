@@ -14,16 +14,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
   skeleton,
 }) => {
-  return project ? (
+  return project && !skeleton ? (
     <div className="rounded-md border shadow-md xs:w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/4 pb-4 m-2">
       <div className="flex flex-row items-center mb-4 pt-5 px-5">
-        {/* TEMPORARY IMAGE */}
-        {/* <img
-          alt={project.name}
-          className="mr-2 h-8"
-          // src={`https://www.tinygraphs.com/labs/isogrids/hexa16/${project.name}?theme=frogideas&numcolors=4&size=50&fmt=svg`}
-          // src={}
-        /> */}
         <GeneratedSVG
           className="mr-2 h-8 items-center justify-center"
           str={project.name}
@@ -53,6 +46,24 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       </div>
     </div>
   ) : (
-    <div>skeleton - {skeleton}</div>
+    <div className="rounded-md border shadow-md bg-gray-200 h-80 xs:w-full sm:w-full md:w-full lg:w-1/2 xl:w-1/4 pb-4 m-2 animate-pulse">
+      <div className="flex flex-row items-center mb-4 h-24 pt-5 px-5">
+        <div className="text-2xl h-4" />
+      </div>
+      <div className="flex flex-col">
+        <div className="flex flex-row items-center justify-between px-5">
+          <span className="flex flex-row items-center">
+            <i className="material-icons mr-2">code</i>
+            <div className="h-2" />
+          </span>
+
+          <div className="flex divide-x">
+            <div className="pr-2 h-6 mr-1 w-14 bg-gray-300" />
+            <div className="pl-2 h-6 w-14 bg-gray-300" />
+          </div>
+        </div>
+        <div className="bg-gray-400 my-4 h-28 flex items-center justify-center" />
+      </div>
+    </div>
   );
 };
