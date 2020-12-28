@@ -1,0 +1,33 @@
+type User {
+  id: ID!
+  # Tokens are optional to request, but not optional for function
+  token: String
+  email: String!
+  name: String!
+  password: String!
+}
+
+# ID is optional so we can use this same input for updates
+input UserInput {
+  id: ID
+  email: String!
+  name: String!
+  password: String!
+}
+
+# email + password OR id are required. Not a combo
+input UserLogin {
+  email: String!
+  password: String!
+  # key: String -> NOT IMPLEMENTED YET
+}
+
+type Mutation {
+  register(user: UserInput!, genToken: Boolean): User
+  login(user: UserLogin!, genToken: Boolean): User
+  validate(token: String!): User
+}
+
+# type Query {
+#   # user(search: UserSearch): User
+# }

@@ -1,22 +1,22 @@
-import App from 'next/app';
-import { ContextProviders } from '../components/ContextProviders';
+import { AppProps } from 'next/app';
+
 import Layout from '../components/Layout';
-import { Context } from '../store';
+import { StateProvider } from '../store';
+import { ProjectStateProvider } from '../store/projects';
+import '../styles/globals.css';
 
-class MyApp extends App {
-  static contextType = Context;
-
-  render(): JSX.Element {
-    const { Component, pageProps } = this.props;
-
-    return (
-      <ContextProviders>
+const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
+  return (
+    // User/main state first
+    <StateProvider>
+      {/* Then dependent project state */}
+      <ProjectStateProvider>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </ContextProviders>
-    );
-  }
-}
+      </ProjectStateProvider>
+    </StateProvider>
+  );
+};
 
 export default MyApp;

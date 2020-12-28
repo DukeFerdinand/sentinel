@@ -1,0 +1,28 @@
+type Project {
+  id: ID!
+  createdBy: ID!
+  name: String!
+  language: String!
+}
+
+type Paging {
+  current: Int!
+  count: Int!
+  offset: Int!
+}
+
+input ProjectInput {
+  createdBy: ID!
+  name: String!
+  language: String!
+}
+
+type Mutation {
+  newProject(projectInfo: ProjectInput!): Project
+  deleteProject(id: ID!): Boolean!
+}
+
+type Query {
+  project(id: ID, name: String): Project
+  projects(limit: Int, offset: Int): [Project]!
+}

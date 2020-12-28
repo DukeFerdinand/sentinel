@@ -1,0 +1,21 @@
+type ApiKey {
+  id: ID!
+  token: String!
+  name: String!
+  environment: String!
+}
+
+input ApiKeyInput {
+  name: String!
+  project: ID!
+  environment: String!
+}
+
+type Query {
+  activeKeys(projectId: ID!): [ApiKey!]!
+}
+
+type Mutation {
+  addApiKey(config: ApiKeyInput): ApiKey!
+  revokeKey(id: ID!): ApiKey!
+}

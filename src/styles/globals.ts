@@ -11,10 +11,6 @@ export const GlobalStyles = css`
       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   }
 
-  body {
-    background: #eee;
-  }
-
   a {
     color: inherit;
     text-decoration: none;
