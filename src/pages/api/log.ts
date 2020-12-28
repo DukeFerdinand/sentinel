@@ -72,20 +72,8 @@ export default async function (
     const envDoc = envCollection.doc(tokenInfo.environment);
     const issues = envDoc.collection('issues');
 
+    // TODO: Add req body validation
     console.info(req.body);
-
-    // Temp static issue until req validation implemented
-    const issue = {
-      title: 'Error in main.js @ test',
-      issueType: IssueType.Error,
-      open: true,
-      stack: new Error().stack,
-      extra: JSON.stringify({
-        user: 'Duke',
-        version: 'v1.1.1',
-      }),
-      handled: true,
-    };
 
     // Create document for new issue
     const issueDoc = issues.doc();
