@@ -3,7 +3,11 @@ import gql from 'graphql-tag';
 import Head from 'next/head';
 import { useContext, useEffect } from 'react';
 
-import { Project } from '../../@generated/graphql';
+import {
+  Project,
+  Query,
+  QueryEnvironmentsArgs,
+} from '../../@generated/graphql';
 import { authClient } from '../../lib/apolloClient';
 import { ProjectAction } from '../../store/actions';
 import { ProjectState, ProjectStore } from '../../store/projects';
@@ -14,6 +18,8 @@ interface ProjectLayoutProps {
   title: string;
   showManagementBar: boolean;
 }
+
+// Queries
 
 const ALL_PROJECTS_QUERY = gql`
   query allProjects {
@@ -26,18 +32,40 @@ const ALL_PROJECTS_QUERY = gql`
   }
 `;
 
+const ALL_ENVIRONMENTS_QUERY = gql`
+  query EnvironmentsForProject($projectId: String!) {
+    environments(projectId: $projectId) {
+      name
+      total
+    }
+  }
+`;
+
 export const ProjectLayout: React.FC<ProjectLayoutProps> = ({
   children,
   showManagementBar,
   title,
 }) => {
-  const { project, projects, dispatch } = useContext(ProjectStore);
+  const { project, projects, environments, dispatch } = useContext(
+    ProjectStore
+  );
   const { data, loading, error } = useQuery<{ projects: Array<Project> }>(
     ALL_PROJECTS_QUERY,
     {
       client: authClient,
     }
   );
+
+  const { data: envData, loading: envLoading, error: envError } = useQuery<
+    Pick<Query, 'environments'>
+  >(ALL_ENVIRONMENTS_QUERY, {
+    client: authClient,
+    // Can't get environments without a project
+    skip: !project,
+    variables: {
+      projectId: project?.id,
+    },
+  });
 
   useEffect(() => {
     if (data && !(project || projects.length)) {
@@ -51,7 +79,17 @@ export const ProjectLayout: React.FC<ProjectLayoutProps> = ({
         } as ProjectState,
       });
     }
-  }, [data, dispatch, project, projects]);
+
+    if (envData && environments.length === 0) {
+      console.info('dispatching environments');
+      dispatch({
+        type: ProjectAction.SET_AVAILABLE_ENVIRONMENTS,
+        payload: envData.environments,
+      });
+    }
+  }, [data, envData, dispatch, project, projects, environments]);
+
+  console.info('[ENV QUERY]', envData, envLoading, envError);
 
   return (
     <section className="h-full flex flex-row">

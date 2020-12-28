@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import Link from 'next/link';
 import gql from 'graphql-tag';
 
@@ -167,7 +167,7 @@ const KeyManagementContent: NextPage = () => {
 
 const KeyManagementPage: NextPage = () => {
   return (
-    <ProjectLayout title="Sentinel Key Management" showManagementBar={false}>
+    <ProjectLayout title="Sentinel Key Management" showManagementBar>
       <KeyManagementContent />
     </ProjectLayout>
   );
