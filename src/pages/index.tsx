@@ -57,6 +57,10 @@ export const Home: NextPage = () => {
               </div>
             </Carousel>
           </div>
+          <div className="mt-4 mb-4">
+            NOTE: There will be some dead links to informational pages as the
+            main features for this application get developed
+          </div>
           <div className="mt-4 flex items-center justify-end">
             <b>TL;DR</b>:{' '}
             <Link href="/getting-started">
