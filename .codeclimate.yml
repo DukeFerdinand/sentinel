@@ -18,3 +18,4 @@ exclude_patterns:
   - '**/__tests__/'
   - 'src/@generated/'
   - 'src/@types/'
+  - 'src/lib/apollo.tsx'
