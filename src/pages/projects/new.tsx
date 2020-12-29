@@ -251,8 +251,8 @@ const NewProject: NextPage = () => {
                 personal use than a fully supported application, non-owner
                 accounts are limited to a project count of 6. This is mainly to
                 keep costs down as hosting can get <i>expensive</i> for
-                real-time and logging applications. After all, it's 99% read and
-                write actions ;)
+                real-time and logging applications. After all, it&apos;s 99%
+                read and write actions ;)
               </p>
               <p className="mb-6">
                 If you need more projects, or a more supported product, I
