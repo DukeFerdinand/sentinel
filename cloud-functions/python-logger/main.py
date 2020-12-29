@@ -8,28 +8,29 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 # ==================================================================
+# Globals to be potentially reused
+# ==================================================================
+is_dev = environ['CLOUD_FUNCTION_ENV'] == 'dev' # This doesn't do much for now, but is available
+db = None
+
+# ==================================================================
 # Initialize app instance/database connection
 # ==================================================================
-
 def json_response(status: int, data: dict):
     return make_response(jsonify(data), status)
 
 def print_log(message: str):
-    print(f'[ ISSUE LOGGER ] {message}')
+    print(f'[ ISSUE INGEST ] {message}')
 
 def init_db():
-    # Dev mode needs to be provided with a key file.
-    # Prod mode already has access to our GCP project, as it IS our project
-    cred = credentials.ApplicationDefault() if environ['CLOUD_FUNCTION_DEV'] == 'true' else credentials.Certificate('../secrets.json')
+    # Prod env already has access to this, but you'll need to setup the gcloud sdk for local work
+    cred = credentials.ApplicationDefault()
 
     # might only apply to dev? - init app if not already in memory
     if firebase_admin._DEFAULT_APP_NAME not in firebase_admin._apps:
-        if is_dev:
-            app = firebase_admin.initialize_app(cred)
-        else:
-            app = firebase_admin.initialize_app(cred, {
-                'projectId': environ['CLOUD_FUNCTION_DEV']
-            })
+        app = firebase_admin.initialize_app(cred, {
+            'projectId': environ['CLOUD_FUNCTION_PROJECT']
+        })
     else:
         app = firebase_admin.get_app()
 
@@ -41,12 +42,6 @@ def issue_valid(issue: dict):
         if key not in issue:
             return False
     return True
-
-# ==================================================================
-# Globals to be potentially reused
-# ==================================================================
-is_dev = environ['CLOUD_FUNCTION_DEV']
-db = None
 
 def sentinel_issue_logger(request: Request):
     """HTTP Cloud Function.
