@@ -13,7 +13,7 @@ describe('incCount', () => {
           },
           // Should not be a real uuid. ALWAYS use 'test-account' for testing
           createdBy: { stringValue: 'test-account' },
-          language: { strginValue: 'Node.js' },
+          language: { stringValue: 'Node.js' },
         },
       },
     });

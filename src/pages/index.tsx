@@ -47,9 +47,9 @@ export const Home: NextPage = () => {
               <div className="bg-blue-800 h-80 flex">
                 <p className="text-white m-auto w-3/4">
                   Last feature page: This application is a work in progress, and
-                  OPEN SOURCE! So if you don't see a feature you want, you can
-                  either make an issue and wait for me to roll it out, or make a
-                  PR ;)
+                  OPEN SOURCE! So if you don&apos;t see a feature you want, you
+                  can either make an issue and wait for me to roll it out, or
+                  make a PR ;)
                   <br />
                   <br />
                   {'<link to the contribution page>'}

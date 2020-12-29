@@ -14,7 +14,7 @@ import { environmentsPath } from '../utils';
 
 export const issueResolvers: ResolverObj<'Query'> = {
   Query: {
-    issue(_, { issueId }: QueryIssueArgs, {}: ResolverContext) {},
+    // issue(_, { issueId }: QueryIssueArgs, {}: ResolverContext) {},
     async issues(
       _,
       { projectId, environment }: QueryIssuesArgs,
