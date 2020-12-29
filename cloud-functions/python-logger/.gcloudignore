@@ -1,0 +1,8 @@
+node_modules
+venv
+
+__pycache__
+secrets.json
+
+# Testing specific
+setup-testing.sh

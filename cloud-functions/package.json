@@ -1,0 +1,14 @@
+{
+  "name": "cloud-functions",
+  "version": "0.1.0",
+  "description": "Utils for creating and managing cloud functions for the sentinel app",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "scripts": {
+    "dev:logger": "CLOUD_FUNCTION_ENV=dev CLOUD_FUNCTION_PROJECT=sentinel-api-dev functions-framework --target=sentinel_issue_logger --source=python-logger/main.py",
+    "deploy:logger": "gcloud functions deploy sentinel-logger --entry-point sentinel_issue_logger --runtime python38 --trigger-http --allow-unauthenticated --env-vars-file .env.dev.yaml"
+  }
+}
