@@ -1,5 +1,9 @@
 module.exports = {
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/.next/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/cloud-functions/',
+  ],
   snapshotSerializers: ['@emotion/jest/serializer'],
   setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
   transform: {
