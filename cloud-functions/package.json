@@ -8,6 +8,6 @@
     "nodemon": "^2.0.6"
   },
   "scripts": {
-    "dev:logger": "CLOUD_FUNCTION_DEV=true nodemon -e py -x functions-framework -- --debug --target=hello_http --source=python-logger/main.py"
+    "dev:logger": "CLOUD_FUNCTION_DEV=true nodemon -e py -x functions-framework -- --target=sentinel_issue_logger --source=python-logger/main.py"
   }
 }

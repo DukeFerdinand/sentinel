@@ -1,14 +1,54 @@
 from os import environ
-from flask import escape, Response, abort, Request
+from flask import make_response, jsonify, abort, Request
+import time
 
+# firebase/firestore specific
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-def print_log(message: str):
-    print(f'[ LOGGER FUNCTION ] {message}')
+# ==================================================================
+# Initialize app instance/database connection
+# ==================================================================
 
-def hello_http(request: Request):
+def json_response(status: int, data: dict):
+    return make_response(jsonify(data), status)
+
+def print_log(message: str):
+    print(f'[ ISSUE LOGGER ] {message}')
+
+def init_db():
+    # Dev mode needs to be provided with a key file.
+    # Prod mode already has access to our GCP project, as it IS our project
+    cred = credentials.ApplicationDefault() if environ['CLOUD_FUNCTION_DEV'] == 'true' else credentials.Certificate('../secrets.json')
+
+    # might only apply to dev? - init app if not already in memory
+    if firebase_admin._DEFAULT_APP_NAME not in firebase_admin._apps:
+        if is_dev:
+            app = firebase_admin.initialize_app(cred)
+        else:
+            app = firebase_admin.initialize_app(cred, {
+                'projectId': environ['CLOUD_FUNCTION_DEV']
+            })
+    else:
+        app = firebase_admin.get_app()
+
+    return firestore.client(app)
+
+def issue_valid(issue: dict):
+    required_keys = ['title', 'issueType', 'stack', 'open', 'handled']
+    for key in required_keys:
+        if key not in issue:
+            return False
+    return True
+
+# ==================================================================
+# Globals to be potentially reused
+# ==================================================================
+is_dev = environ['CLOUD_FUNCTION_DEV']
+db = None
+
+def sentinel_issue_logger(request: Request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
@@ -18,7 +58,14 @@ def hello_http(request: Request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
+    global db, is_dev
     print_log('Received log request')
+    print_log(f'Production mode: {not is_dev}')
+
+    # ==================================================================
+    # Initialize DB connection, any other global reqs
+    # ==================================================================
+    db = init_db()
 
     # ==================================================================
     # Check if correct method
@@ -28,14 +75,41 @@ def hello_http(request: Request):
         return abort(405, 'Only POST allowed')
 
     # ==================================================================
-    # Check if auth header is available (no validation yet)
+    # Check if auth header is available, and do shape validation
     # ==================================================================
     auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return abort(403, { "message": "Authorization header required" })
+    # a correct key looks like <projectId>.<token>
+    if not auth_header or len(auth_header.split('.')) != 2:
+        return abort(json_response(401, { "message": 'Authorization token invalid or missing' }))
 
-    # request_json = request.get_json(silent=True)
+    # ==================================================================
+    # Validate auth token
+    # ==================================================================
+    # Prep auth header for actual use
+    [project_id, token] = auth_header.split('.')
+
+    # Turn post body into JSON
+    request_body = request.get_json(silent=True)
+
+    # If query params are ever needed
     # request_args = request.args
-    print(auth_header.split('.'))
 
-    return { "test": "hello" }
+    projects_doc = db.collection(u'projects').document(project_id)
+
+    # Validate provided key - entry will not exist if project or token do not exist
+    keysRef = projects_doc.collection('keys')
+    keys = keysRef.where('token', '==', token).get()
+    if len(keys) == 0:
+        abort(json_response(403, { "message": "Authorization token invalid or revoked" }))
+
+
+    # Run final validation on body before writing
+    if not request_body or not issue_valid(request_body):
+        return abort(json_response(400, {"message": "Request body missing or malformed"}))
+
+    # All relevant info assumed valid by this point - write new issue to project's issues collection
+    issue_ref = projects_doc.collection('issues').document()
+    issue_ref.set(request_body)
+
+    print_log(f'Logged issue - {issue_ref.id}')
+    return { "created": issue_ref.id }
