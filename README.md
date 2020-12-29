@@ -1,6 +1,6 @@
 ## Sentinel
 
-[![buddy pipeline](https://app.buddy.works/douglasshooker/sentinel/pipelines/pipeline/294513/badge.svg?token=61a92f524166b6bb6c97fd997e9745d6f5c4e3e5b918665b7f5b5456b2a6b021 'buddy pipeline')](https://app.buddy.works/douglasshooker/sentinel/pipelines/pipeline/294513)
+[![CircleCI](https://circleci.com/gh/DukeFerdinand/sentinel.svg?style=shield)](https://circleci.com/gh/DukeFerdinand/sentinel)
 
 Something of a clone to the ever popular [sentry](sentry.io) error and exception tracker. For legal and support reasons (or if you're not a little crazy like me), give a look to their open source, self-hosted software before you look here :)
 
