@@ -14,7 +14,7 @@ $ git clone git@github.com:DukeFerdinand/sentinel.git
 # Install
 $ yarn
 # Setup your env
-$ cp .env.local.example .env.local # then optionally edit the new .env.local file
+$ cp .env.local.example .env.local # then make sure to edit the new .env.local file
 # Run
 $ yarn dev
 # Test
@@ -37,28 +37,32 @@ Here's the layout, along with _planned_ features marked with `?` where they aren
 - My ts-utils lib with `smartFetch`
 - GQL (apollo)
 - Next.js
-- Emotion.js
+- Tailwind CSS
 
 #### Backend
 
-- Next.js serverless functions (GQL, Auth ?)
-- Node.js event ingesting functions ?
-- MongoDB
+- Next.js functions (Apollo GQL Server, GQL Auth)
+- Google Cloud Function for ingesting new issues
+- Google Cloud Firestore
 
 #### Planned Integrations ?
 
 - Generic JS module first
 - React `HOC`
-- Rust crate
 - Python package (I use python for MQTT and Pi stuff a lot)
+- Rust crate
 
 And of course tying it all together...
 
 #### Hosting
 
-UI and most serverless Next.js functions will be shipped via Vercel (parent company of Next.js now) for the first class citizen perks. Sorry Netlify I love you, but not this time. I need that zero effort SSR hosting! :(
+UI and most serverless Next.js functions will be shipped via Vercel (parent company of Next.js now) for the first class citizen perks. Sorry Netlify I love you, but not this time. I need that zero effort API Route hosting! :(
 
-Any general ingesting will mostly be serverless Node functions. This could be done with Vercel too, but I have an affinity for GCP because I basically taught it to myself in Grand Central while I was in NYC, though AWS would work too... Ultimately whatever is cheaper because they're just as complicated ;)
+Any general ingesting will mostly be serverless Python functions. This could be done with Vercel too, but I have an affinity for Google Cloud Platform because I basically taught it to myself in Grand Central while I was in NYC :)
+
+**Update on the Vercel functions now that I've experimented**: They're WAY too slow for my use case (800ms - 1000ms, no noticeable spinup difference), and I have no idea where to begin on speeding them up. I scrapped the log function for ingesting, rewrote it in Python, and am now a happy customer of Google's Cloud Functions (~200ms per un-optimized request after initial spin up) :)
+
+It's technically not free, but as long as I don't go over 1 million logs in a month, then it won't really be a problem! Even if I do go over, it's PENNIES to run the load that I need.
 
 ### Can I use this?
 
